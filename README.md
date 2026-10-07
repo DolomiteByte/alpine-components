@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.4.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.5.0")
 }
 ```
 
@@ -97,7 +97,7 @@ The primary button shows its Alpine Fold arrow on the right by default. `trailin
 
 ### Bottom tabs
 
-`AlpineBottomTabs` displays destinations with icons and labels. The selected tab has a blue gradient icon tile; the bar and text adapt to light and dark mode. Supply the selected index and handle navigation in `onTabSelected`. Three to five destinations are recommended for compact screens.
+`AlpineBottomTabs` follows TheraBuddy's expanding tab interaction: the selected tab grows into an Alpine blue pill with a white icon and Manrope label, while inactive tabs show only icons. The bar adapts to light and dark mode. Supply the selected index and handle navigation in `onTabSelected`. Three to five destinations are recommended for compact screens.
 
 ```kotlin
 import androidx.compose.material.icons.Icons
@@ -118,13 +118,13 @@ import com.dolomitebyte.alpine.components.AlpineBottomTabs
 var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 val tabs = listOf(
     AlpineBottomTabItem("Start", { tint ->
-        Icon(Icons.Default.Home, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+        Icon(Icons.Default.Home, contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
     }),
     AlpineBottomTabItem("Suche", { tint ->
-        Icon(Icons.Default.Search, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+        Icon(Icons.Default.Search, contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
     }),
     AlpineBottomTabItem("Profil", { tint ->
-        Icon(Icons.Default.Person, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+        Icon(Icons.Default.Person, contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
     }),
 )
 

@@ -1,40 +1,42 @@
 package com.dolomitebyte.alpine.components
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,14 +46,8 @@ private val GradientStart = Color(0xFF0A5BE3)
 private val GradientEnd = Color(0xFF0054FF)
 private val LightSurface = Color.White
 private val DarkSurface = Color(0xFF181D23)
-private val LightBorder = Color(0xFFD2DAE5)
-private val DarkBorder = Color(0xFF39414B)
 private val LightInactive = Color(0xFF64748B)
 private val DarkInactive = Color(0xFFAAB8C8)
-private val LightSelected = Color(0xFF0054FF)
-private val DarkSelected = Color(0xFF6DE1EF)
-private val IconShape = RoundedCornerShape(10.dp)
-private val TabShape = RoundedCornerShape(12.dp)
 private val Manrope = FontFamily(Font(R.font.manrope_semibold, FontWeight.SemiBold))
 
 /** One destination in [AlpineBottomTabs]. The label describes its decorative icon. */
@@ -62,11 +58,12 @@ data class AlpineBottomTabItem(
 )
 
 /**
- * A compact Alpine bottom navigation bar for persistent app destinations.
+ * An Alpine bottom navigation bar with the expanding pill animation used by TheraBuddy.
  *
  * The caller owns [selectedIndex] and performs navigation in [onTabSelected].
- * Three to five destinations are recommended. Icons receive the current tint;
- * their semantics are hidden because [AlpineBottomTabItem.label] names the tab.
+ * Three to five destinations are recommended. The selected tab expands to show its
+ * label; inactive tabs show only icons. Icons receive the current tint and their
+ * semantics are hidden because [AlpineBottomTabItem.label] names the tab.
  * [windowInsets] defaults to the Android navigation bar inset and can be overridden
  * when a parent already applies it.
  */
@@ -83,76 +80,76 @@ fun AlpineBottomTabs(
     require(selectedIndex in items.indices) { "selectedIndex must refer to an item" }
 
     val surface = if (darkTheme) DarkSurface else LightSurface
-    val border = if (darkTheme) DarkBorder else LightBorder
     val inactive = if (darkTheme) DarkInactive else LightInactive
-    val selected = if (darkTheme) DarkSelected else LightSelected
 
-    Column(
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(6.dp)
             .background(surface)
             .windowInsetsPadding(windowInsets),
     ) {
-        Box(Modifier.fillMaxWidth().height(1.dp).background(border))
+        // Keep the pill inside the bar even with five tabs on a 320 dp screen.
+        val maxSelectedWidth = (maxWidth - 16.dp - 48.dp * (items.size - 1))
+            .coerceAtLeast(64.dp)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(80.dp)
                 .selectableGroup()
-                .padding(horizontal = 8.dp, vertical = 8.dp),
+                .padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             items.forEachIndexed { index, item ->
                 val isSelected = index == selectedIndex
-                val labelColor = if (isSelected) selected else inactive
                 val iconColor = if (isSelected) Color.White else inactive
-                Column(
+                Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .heightIn(min = 64.dp)
+                        .then(if (isSelected) Modifier.widthIn(max = maxSelectedWidth) else Modifier)
                         .alpha(if (item.enabled) 1f else 0.45f)
-                        .clip(TabShape)
+                        .semantics { contentDescription = item.label }
+                        .clip(CircleShape)
+                        .then(
+                            if (isSelected) Modifier.background(
+                                Brush.linearGradient(listOf(GradientStart, GradientEnd)),
+                            ) else Modifier,
+                        )
                         .selectable(
                             selected = isSelected,
                             enabled = item.enabled,
                             role = Role.Tab,
                             onClick = { onTabSelected(index) },
                         )
-                        .padding(horizontal = 2.dp, vertical = 6.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                        .padding(horizontal = if (isSelected) 16.dp else 12.dp, vertical = 10.dp)
+                        .animateContentSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    val iconModifier = Modifier
-                        .size(width = 38.dp, height = 32.dp)
-                        .clip(IconShape)
-                        .then(
-                            if (isSelected) Modifier.background(
-                                Brush.linearGradient(listOf(GradientStart, GradientEnd)),
-                            ) else Modifier,
-                        )
-                    Box(iconModifier, contentAlignment = Alignment.Center) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
                         Box(
-                            Modifier.size(20.dp).clearAndSetSemantics {},
+                            Modifier.size(24.dp).clearAndSetSemantics {},
                             contentAlignment = Alignment.Center,
                         ) {
                             item.icon(iconColor)
                         }
+                        if (isSelected) {
+                            Spacer(Modifier.width(8.dp))
+                            BasicText(
+                                text = item.label,
+                                style = TextStyle(
+                                    color = Color.White,
+                                    fontFamily = Manrope,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                    lineHeight = 20.sp,
+                                ),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
                     }
-                    Spacer(Modifier.height(4.dp))
-                    BasicText(
-                        text = item.label,
-                        modifier = Modifier.fillMaxWidth(),
-                        style = TextStyle(
-                            color = labelColor,
-                            fontFamily = Manrope,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 11.sp,
-                            lineHeight = 15.sp,
-                            textAlign = TextAlign.Center,
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
                 }
             }
         }
