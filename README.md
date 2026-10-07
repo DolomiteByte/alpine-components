@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons plus bottom tabs for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, text and email inputs, a message area, and bottom tabs for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.5.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.6.0")
 }
 ```
 
@@ -95,6 +95,44 @@ AlpineSecondaryButton(
 
 The primary button shows its Alpine Fold arrow on the right by default. `trailingIcon` replaces that arrow; `showDefaultArrow = false` removes it. The secondary button has no default icon. `enabled = false` dims either button to 50% opacity and blocks clicks. `loading = true` keeps the label, hides the leading icon, replaces right-side content with a spinner, and blocks clicks. Loading is announced to accessibility services in English or German according to the device locale. Icons alongside a text label are decorative; pass `contentDescription = null` to Compose `Icon`.
 
+### Inputs
+
+The DolomiteByte contact form has single-line text fields for name and subject, an email field, and a five-line message area. `AlpineTextField`, `AlpineEmailField`, and `AlpineTextArea` reproduce their underlined Manrope style in light and dark mode. Labels and underlines take the Alpine accent color on focus. The email field requests an email keyboard; the message area accepts multiple lines.
+
+```kotlin
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
+import com.dolomitebyte.alpine.components.AlpineEmailField
+import com.dolomitebyte.alpine.components.AlpineTextArea
+import com.dolomitebyte.alpine.components.AlpineTextField
+
+var name by rememberSaveable { mutableStateOf("") }
+var email by rememberSaveable { mutableStateOf("") }
+var subject by rememberSaveable { mutableStateOf("") }
+var message by rememberSaveable { mutableStateOf("") }
+
+Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+    AlpineTextField(name, { name = it }, label = "Name", placeholder = "Dein Name")
+    AlpineEmailField(
+        email,
+        { email = it },
+        label = "Email",
+        placeholder = "name@beispiel.de",
+        isError = email.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches(),
+        errorMessage = "Bitte eine gültige E-Mail-Adresse eingeben",
+    )
+    AlpineTextField(subject, { subject = it }, label = "Betreff", placeholder = "Worum geht es?")
+    AlpineTextArea(message, { message = it }, label = "Nachricht", placeholder = "Erzähl uns von deinem Vorhaben ...")
+}
+```
+
+All inputs are controlled: pass their current `value` and update it in `onValueChange`. Use `enabled = false` for a disabled field and `readOnly = true` for a non-editable value. The host app decides when a required field is invalid and passes `isError = true`; `errorMessage` is shown below the underline and announced to accessibility services. An error without a message receives a localized generic announcement. The text field accepts custom `keyboardOptions` and `keyboardActions`, the email field exposes `imeAction`, and the message area accepts `minLines`.
+
 ### Bottom tabs
 
 `AlpineBottomTabs` follows TheraBuddy's expanding tab interaction: the selected tab grows into an Alpine blue pill with a white icon and Manrope label, while inactive tabs show only icons. The bar adapts to light and dark mode. Supply the selected index and handle navigation in `onTabSelected`. Three to five destinations are recommended for compact screens.
@@ -154,7 +192,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), and [design/bottom-tabs.md](design/bottom-tabs.md). The bundled static Manrope Bold and SemiBold fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/inputs.md](design/inputs.md), and [design/bottom-tabs.md](design/bottom-tabs.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 

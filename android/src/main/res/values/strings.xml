@@ -1,3 +1,4 @@
 <resources>
     <string name="alpine_button_loading">Loading</string>
+    <string name="alpine_input_invalid">Invalid input</string>
 </resources>
