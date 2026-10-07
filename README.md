@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The first released component is the **Android primary button** for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.1.1")
+    implementation("com.github.DolomiteByte:alpine-components:0.2.0")
 }
 ```
 
@@ -30,17 +30,23 @@ Use it in Compose:
 
 ```kotlin
 import com.dolomitebyte.alpine.components.AlpinePrimaryButton
+import com.dolomitebyte.alpine.components.AlpineSecondaryButton
 
 AlpinePrimaryButton(
     text = "Kontakt aufnehmen",
     onClick = { /* handle primary action */ },
+)
+
+AlpineSecondaryButton(
+    text = "Mehr erfahren",
+    onClick = { /* handle secondary action */ },
 )
 ```
 
 For an app-controlled theme, pass its current mode:
 
 ```kotlin
-AlpinePrimaryButton(
+AlpineSecondaryButton(
     text = "Weiter",
     onClick = { /* continue */ },
     darkTheme = appDarkTheme,
@@ -48,7 +54,7 @@ AlpinePrimaryButton(
 )
 ```
 
-The button provides click and disabled semantics for accessibility. Its light and dark previews, plus a disabled preview, live alongside the component in `android/src/main`.
+Both buttons provide click and disabled semantics for accessibility. Their light and dark previews, plus disabled previews, live alongside the components in `android/src/main`.
 
 ## Development
 
@@ -64,7 +70,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md). The bundled static Manrope Bold font is derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retains its [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md) and [design/secondary-button.md](design/secondary-button.md). The bundled static Manrope Bold and SemiBold fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.DolomiteByte"
-version = "0.1.1"
+version = "0.2.0"
 
 android {
     namespace = "com.dolomitebyte.alpine.components"
@@ -30,6 +30,7 @@ android {
 dependencies {
     api(platform("androidx.compose:compose-bom:2026.06.01"))
     api("androidx.compose.ui:ui")
+    implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.foundation:foundation")
     compileOnly("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
