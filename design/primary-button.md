@@ -15,5 +15,9 @@ Source: the DolomiteByte website's `.button-primary` style and `/alpine-fold-arr
 | Dark border | 1 px/dp `rgba(108,170,255,0.45)`; hover `#74B3FF` |
 | Focus ring | 3 px/dp, 3 px/dp outside; `#0054FF` in light mode, `#33D5EB` in dark mode |
 | Disabled | 50% opacity, no click or shadow |
+| Optional icons | 20 × 20 px/dp slots left and right of label; 12 px/dp gap; white tint |
+| Loading | Keep label; hide left icon; replace right icon or Alpine Fold arrow with 20 px/dp rotating spinner; no click |
 
 The gradient, text, shape, and icon are the same in light and dark mode. The border and shadow change with theme. On pointer devices, hover raises the shadow and shifts the icon 2 px/dp to the right. Press removes the shadow and shifts the icon 1 px/dp. Platforms should follow native touch, focus, and accessibility behavior; the Android implementation uses a native shadow and Compose indication to approximate the website's layered CSS shadows.
+
+The Alpine Fold arrow appears by default. A custom right icon replaces it; the arrow can also be removed without replacement. Disabled and loading states expose their interaction state to accessibility services; loading has a localized state description.

@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.2.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.3.0")
 }
 ```
 
@@ -55,6 +55,45 @@ AlpineSecondaryButton(
 ```
 
 Both buttons provide click and disabled semantics for accessibility. Their light and dark previews, plus disabled previews, live alongside the components in `android/src/main`.
+
+### Button states and icons
+
+Both buttons accept `enabled`, `loading`, `leadingIcon`, and `trailingIcon`. Icons are optional Compose slots. Each slot receives the current content color, so it follows the button theme and hover state. Use a 20 dp icon inside the slot:
+
+The example below uses Material 3 `Icon` and the default Material icons. Add `androidx.compose.material3:material3` and `androidx.compose.material:material-icons-core` to your app if you use these imports. Any Compose icon can be used instead.
+
+```kotlin
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+AlpinePrimaryButton(
+    text = "Speichern",
+    onClick = ::save,
+    enabled = formIsValid,
+    loading = saving,
+    leadingIcon = { tint ->
+        Icon(Icons.Default.Add, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+    },
+    trailingIcon = { tint ->
+        Icon(Icons.Default.Check, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+    },
+)
+
+AlpineSecondaryButton(
+    text = "Mehr erfahren",
+    onClick = ::showDetails,
+    leadingIcon = { tint ->
+        Icon(Icons.Default.Add, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+    },
+)
+```
+
+The primary button shows its Alpine Fold arrow on the right by default. `trailingIcon` replaces that arrow; `showDefaultArrow = false` removes it. The secondary button has no default icon. `enabled = false` dims either button to 50% opacity and blocks clicks. `loading = true` keeps the label, hides the leading icon, replaces right-side content with a spinner, and blocks clicks. Loading is announced to accessibility services in English or German according to the device locale. Icons alongside a text label are decorative; pass `contentDescription = null` to Compose `Icon`.
 
 ## Development
 

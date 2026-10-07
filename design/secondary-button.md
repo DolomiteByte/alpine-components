@@ -14,5 +14,9 @@ Source: the DolomiteByte website's base `.button-secondary` style, as implemente
 | Dark hover | `#202932` background, `#5D849A` border, `#6DE1EF` label |
 | Focus ring | 3 px/dp, 3 px/dp outside; `#0054FF` in light mode, `#33D5EB` in dark mode |
 | Disabled | 50% opacity, no click or shadow |
+| Optional icons | 20 × 20 px/dp slots left and right of label; 12 px/dp gap; icon tint follows label color |
+| Loading | Keep label; hide left icon; replace right icon with 20 px/dp rotating spinner; no click |
 
 The border is 1 px/dp in both themes. A subtle shadow raises the enabled button; press removes it. On pointer devices, hover raises the button 1 px/dp. The Android implementation uses native shadow and Compose indication for platform feedback.
+
+The secondary button has no default icon. Disabled and loading states expose their interaction state to accessibility services; loading has a localized state description.

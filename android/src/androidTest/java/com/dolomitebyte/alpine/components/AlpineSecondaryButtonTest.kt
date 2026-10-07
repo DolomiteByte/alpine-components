@@ -1,13 +1,25 @@
 package com.dolomitebyte.alpine.components
 
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,7 +50,50 @@ class AlpineSecondaryButtonTest {
             AlpineSecondaryButton(text = "More", onClick = { clicks++ }, enabled = false)
         }
 
-        composeRule.onNodeWithText("More").assertIsNotEnabled()
+        composeRule.onNodeWithText("More")
+            .assertIsNotEnabled()
+            .performTouchInput { click() }
         assertEquals(0, clicks)
+    }
+
+    @Test
+    fun iconsRenderOnBothSidesOfLabel() {
+        composeRule.setContent {
+            AlpineSecondaryButton(
+                text = "More",
+                onClick = {},
+                leadingIcon = { BasicText("L", Modifier.testTag("leading")) },
+                trailingIcon = { BasicText("R", Modifier.testTag("trailing")) },
+            )
+        }
+
+        val leading = composeRule.onNodeWithTag("leading", useUnmergedTree = true)
+            .fetchSemanticsNode().boundsInRoot.left
+        val label = composeRule.onNodeWithText("More", useUnmergedTree = true)
+            .fetchSemanticsNode().boundsInRoot.left
+        val trailing = composeRule.onNodeWithTag("trailing", useUnmergedTree = true)
+            .fetchSemanticsNode().boundsInRoot.left
+        assertTrue(leading < label && label < trailing)
+    }
+
+    @Test
+    fun loadingBlocksClickUntilFinished() {
+        val loading = mutableStateOf(true)
+        var clicks = 0
+        val loadingDescription = InstrumentationRegistry.getInstrumentation()
+            .targetContext.getString(R.string.alpine_button_loading)
+        composeRule.setContent {
+            AlpineSecondaryButton(text = "More", onClick = { clicks++ }, loading = loading.value)
+        }
+
+        val button = composeRule.onNodeWithText("More")
+        button.assertIsNotEnabled()
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, loadingDescription))
+            .performTouchInput { click() }
+        assertEquals(0, clicks)
+
+        composeRule.runOnIdle { loading.value = false }
+        button.assertIsEnabled().performClick()
+        assertEquals(1, clicks)
     }
 }

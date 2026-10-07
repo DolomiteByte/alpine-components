@@ -35,12 +35,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -66,6 +68,8 @@ private val Manrope = FontFamily(Font(R.font.manrope_semibold, FontWeight.SemiBo
  *
  * [darkTheme] defaults to the device setting. Pass your app's current theme mode if
  * it offers a theme switch that differs from the system setting.
+ * Icons receive the button's current content color. [loading] replaces trailing
+ * content with a spinner and blocks clicks.
  */
 @Composable
 fun AlpineSecondaryButton(
@@ -74,12 +78,16 @@ fun AlpineSecondaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    loading: Boolean = false,
+    leadingIcon: (@Composable (Color) -> Unit)? = null,
+    trailingIcon: (@Composable (Color) -> Unit)? = null,
 ) {
+    val interactive = enabled && !loading
     val interactions = remember { MutableInteractionSource() }
     val pressed by interactions.collectIsPressedAsState()
     val hovered by interactions.collectIsHoveredAsState()
     val focused by interactions.collectIsFocusedAsState()
-    val activeHover = enabled && hovered && !pressed
+    val activeHover = interactive && hovered && !pressed
 
     val targetBackground = when {
         darkTheme && activeHover -> DarkHoverBackground
@@ -103,7 +111,7 @@ fun AlpineSecondaryButton(
     val border by animateColorAsState(targetBorder, tween(180), label = "Alpine secondary border")
     val textColor by animateColorAsState(targetText, tween(180), label = "Alpine secondary text")
     val elevation by animateDpAsState(
-        targetValue = if (!enabled || pressed) 0.dp else if (darkTheme) 2.dp else 1.dp,
+        targetValue = if (!interactive || pressed) 0.dp else if (darkTheme) 2.dp else 1.dp,
         label = "Alpine secondary shadow",
     )
     val hoverOffset by animateDpAsState(
@@ -111,6 +119,7 @@ fun AlpineSecondaryButton(
         label = "Alpine secondary hover offset",
     )
     val focusColor = if (darkTheme) Color(0xFF33D5EB) else Color(0xFF0054FF)
+    val loadingDescription = stringResource(R.string.alpine_button_loading)
     val outlineSize = with(LocalDensity.current) { 3.dp.toPx() }
     val outlineGap = with(LocalDensity.current) { 3.dp.toPx() }
     val outlineRadius = with(LocalDensity.current) { 18.dp.toPx() }
@@ -122,7 +131,7 @@ fun AlpineSecondaryButton(
             .alpha(if (enabled) 1f else 0.5f)
             .drawWithContent {
                 drawContent()
-                if (focused && enabled) {
+                if (focused && interactive) {
                     val inset = outlineGap + outlineSize / 2f
                     drawRoundRect(
                         color = focusColor,
@@ -137,28 +146,28 @@ fun AlpineSecondaryButton(
             .clip(ButtonShape)
             .background(background)
             .border(1.dp, border, ButtonShape)
-            .hoverable(interactionSource = interactions, enabled = enabled)
+            .hoverable(interactionSource = interactions, enabled = interactive)
+            .semantics(mergeDescendants = true) {
+                if (loading) stateDescription = loadingDescription
+            }
             .clickable(
                 interactionSource = interactions,
                 indication = LocalIndication.current,
-                enabled = enabled,
+                enabled = interactive,
                 role = Role.Button,
                 onClick = onClick,
             )
             .padding(horizontal = 22.dp, vertical = 14.dp),
         contentAlignment = Alignment.Center,
     ) {
-        BasicText(
+        AlpineButtonContent(
             text = text,
-            style = TextStyle(
-                color = textColor,
-                fontFamily = Manrope,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 15.5.sp,
-                lineHeight = 21.7.sp,
-                letterSpacing = (-0.155).sp,
-                textAlign = TextAlign.Center,
-            ),
+            color = textColor,
+            fontFamily = Manrope,
+            fontWeight = FontWeight.SemiBold,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            loading = loading,
         )
     }
 }
@@ -183,5 +192,32 @@ private fun AlpineSecondaryButtonPreview() {
 private fun AlpineSecondaryButtonDisabledPreview() {
     Box(Modifier.padding(24.dp)) {
         AlpineSecondaryButton(text = "Nicht verfügbar", onClick = {}, enabled = false)
+    }
+}
+
+@Preview(name = "Custom icons", showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+private fun AlpineSecondaryButtonIconsPreview() {
+    Box(Modifier.padding(24.dp)) {
+        AlpineSecondaryButton(
+            text = "Mehr erfahren",
+            onClick = {},
+            leadingIcon = { color -> BasicText("+", style = TextStyle(color = color, fontSize = 20.sp)) },
+            trailingIcon = { color -> BasicText("›", style = TextStyle(color = color, fontSize = 20.sp)) },
+        )
+    }
+}
+
+@Preview(name = "Loading light", showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Preview(
+    name = "Loading dark",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    backgroundColor = 0xFF090D12,
+)
+@Composable
+private fun AlpineSecondaryButtonLoadingPreview() {
+    Box(Modifier.padding(24.dp)) {
+        AlpineSecondaryButton(text = "Mehr erfahren", onClick = {}, loading = true)
     }
 }
