@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons plus bottom tabs for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.3.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.4.0")
 }
 ```
 
@@ -95,6 +95,51 @@ AlpineSecondaryButton(
 
 The primary button shows its Alpine Fold arrow on the right by default. `trailingIcon` replaces that arrow; `showDefaultArrow = false` removes it. The secondary button has no default icon. `enabled = false` dims either button to 50% opacity and blocks clicks. `loading = true` keeps the label, hides the leading icon, replaces right-side content with a spinner, and blocks clicks. Loading is announced to accessibility services in English or German according to the device locale. Icons alongside a text label are decorative; pass `contentDescription = null` to Compose `Icon`.
 
+### Bottom tabs
+
+`AlpineBottomTabs` displays destinations with icons and labels. The selected tab has a blue gradient icon tile; the bar and text adapt to light and dark mode. Supply the selected index and handle navigation in `onTabSelected`. Three to five destinations are recommended for compact screens.
+
+```kotlin
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
+import com.dolomitebyte.alpine.components.AlpineBottomTabItem
+import com.dolomitebyte.alpine.components.AlpineBottomTabs
+
+var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+val tabs = listOf(
+    AlpineBottomTabItem("Start", { tint ->
+        Icon(Icons.Default.Home, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+    }),
+    AlpineBottomTabItem("Suche", { tint ->
+        Icon(Icons.Default.Search, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+    }),
+    AlpineBottomTabItem("Profil", { tint ->
+        Icon(Icons.Default.Person, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
+    }),
+)
+
+AlpineBottomTabs(
+    items = tabs,
+    selectedIndex = selectedTab,
+    onTabSelected = { index ->
+        selectedTab = index
+        // Navigate to your destination for index.
+    },
+)
+```
+
+Place the bar in a `Scaffold`'s `bottomBar`. It applies the Android navigation bar inset by default. Set `darkTheme` if your app theme differs from the device setting, or pass `windowInsets` if a parent handles that inset. Each tab has selection and disabled semantics; the icon is decorative and the label names the destination. The example icons use the same Material 3 and Material icons dependencies noted above.
+
 ## Development
 
 Build and publish the Android AAR to Maven Local:
@@ -109,7 +154,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md) and [design/secondary-button.md](design/secondary-button.md). The bundled static Manrope Bold and SemiBold fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), and [design/bottom-tabs.md](design/bottom-tabs.md). The bundled static Manrope Bold and SemiBold fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 
