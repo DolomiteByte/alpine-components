@@ -6,8 +6,8 @@ plugins {
     `maven-publish`
 }
 
-group = "com.github.DolomiteByte.alpine-components"
-version = "0.1.0"
+group = "com.github.DolomiteByte"
+version = "0.1.1"
 
 android {
     namespace = "com.dolomitebyte.alpine.components"
@@ -48,7 +48,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 from(components["release"])
                 groupId = project.group.toString()
-                artifactId = "android"
+                artifactId = "alpine-components"
                 version = project.version.toString()
                 pom {
                     name.set("Alpine Components for Android")
