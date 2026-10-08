@@ -73,7 +73,6 @@ private data class SnackbarColors(
     val icon: Color,
     val actionBackground: Color,
     val actionText: Color,
-    val secondaryBackground: Color,
     val secondaryText: Color,
 )
 
@@ -82,34 +81,34 @@ private fun snackbarColors(variant: AlpineSnackbarVariant, dark: Boolean): Snack
         surface = Color(0xFF181D23), text = Color(0xFFEDF3FB),
         icon = Color(0xFF6DE1EF),
         actionBackground = Color(0xFF0A5BE3), actionText = Color.White,
-        secondaryBackground = Color(0xFF253A50), secondaryText = Color(0xFFC1EFFF),
+        secondaryText = Color(0xFFC1EFFF),
     ) else SnackbarColors(
         surface = Color.White, text = Color(0xFF24344B),
         icon = Color(0xFF0054FF),
         actionBackground = Color(0xFF0054FF), actionText = Color.White,
-        secondaryBackground = Color(0xFFEDF3FF), secondaryText = Color(0xFF0054FF),
+        secondaryText = Color(0xFF0054FF),
     )
     AlpineSnackbarVariant.Info -> if (dark) SnackbarColors(
         surface = Color(0xFF102C3D), text = Color(0xFFE3F8FF),
         icon = Color(0xFF78DCF5),
         actionBackground = Color(0xFF087CB5), actionText = Color.White,
-        secondaryBackground = Color(0xFF1C4557), secondaryText = Color(0xFFB9EFFF),
+        secondaryText = Color(0xFFB9EFFF),
     ) else SnackbarColors(
         surface = Color(0xFFEBF7FF), text = Color(0xFF163C56),
         icon = Color(0xFF086C9C),
         actionBackground = Color(0xFF087CB5), actionText = Color.White,
-        secondaryBackground = Color(0xFFD8EFFC), secondaryText = Color(0xFF075781),
+        secondaryText = Color(0xFF075781),
     )
     AlpineSnackbarVariant.Warning -> if (dark) SnackbarColors(
         surface = Color(0xFF352719), text = Color(0xFFFFF1D7),
         icon = Color(0xFFFFD08B),
         actionBackground = Color(0xFFA95E0D), actionText = Color.White,
-        secondaryBackground = Color(0xFF5C3D20), secondaryText = Color(0xFFFFE4BE),
+        secondaryText = Color(0xFFFFE4BE),
     ) else SnackbarColors(
         surface = Color(0xFFFFF5E7), text = Color(0xFF5F3E19),
         icon = Color(0xFF9B5808),
         actionBackground = Color(0xFFA55E08), actionText = Color.White,
-        secondaryBackground = Color(0xFFFFEBCB), secondaryText = Color(0xFF874900),
+        secondaryText = Color(0xFF874900),
     )
 }
 
@@ -256,14 +255,13 @@ private fun SnackbarActions(
 @Composable
 private fun SnackbarAction(text: String, onClick: () -> Unit, colors: SnackbarColors, primary: Boolean) {
     val interactions = remember { MutableInteractionSource() }
-    val background = if (primary) colors.actionBackground else colors.secondaryBackground
     val foreground = if (primary) colors.actionText else colors.secondaryText
     Box(
         modifier = Modifier
             .widthIn(max = 120.dp)
             .defaultMinSize(minHeight = 48.dp)
             .clip(ActionShape)
-            .background(background)
+            .then(if (primary) Modifier.background(colors.actionBackground) else Modifier)
             .clickable(
                 interactionSource = interactions,
                 indication = ripple(color = foreground),

@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.11.1")
+    implementation("com.github.DolomiteByte:alpine-components:0.11.2")
 }
 ```
 
@@ -172,7 +172,7 @@ The caller owns dialog visibility. The close button, outside tap, and Back call 
 
 ### Snackbars
 
-`AlpineSnackbar` stays only as wide as its content, up to 560 dp. Default, info, and warning variants support an optional icon, a main action, a secondary action, or no actions. Info and warning have a built-in tinted icon without a background or border; use `showIcon = false` to hide it. A custom `icon` slot works with any variant. Long messages wrap, and action buttons move below the text on narrow screens.
+`AlpineSnackbar` stays only as wide as its content, up to 560 dp. Default, info, and warning variants support an optional icon, a main action, a secondary action, or no actions. The main action is filled; the secondary action is text-only. Info and warning have a built-in tinted icon without a background or border; use `showIcon = false` to hide it. A custom `icon` slot works with any variant. Long messages wrap, and action buttons move below the text on narrow screens.
 
 ```kotlin
 import com.dolomitebyte.alpine.components.AlpineSnackbar
