@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, alert dialogs, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, alert dialogs, snackbars, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.10.2")
+    implementation("com.github.DolomiteByte:alpine-components:0.11.0")
 }
 ```
 
@@ -169,6 +169,52 @@ if (showDialog) {
 ```
 
 The caller owns dialog visibility. The close button, outside tap, and Back call `onDismissRequest`; action callbacks run independently. Omit both secondary parameters for a single-action dialog. `primaryActionEnabled`, `primaryActionLoading`, `secondaryActionEnabled`, and `secondaryActionLoading` control the action states. Pass `darkTheme` for an app-controlled theme; `AlpineAlertDialogText` follows it automatically inside the dialog. `AlpineAlertDialogContainer` provides the same panel without the modal wrapper for custom overlays or previews.
+
+### Snackbars
+
+`AlpineSnackbar` stays only as wide as its content, up to 560 dp. Default, info, and warning variants support an optional icon, a main action, a secondary action, or no actions. Info and warning have a built-in icon with a filled background and no border; use `showIcon = false` to hide it. A custom `icon` slot works with any variant. Long messages wrap, and action buttons move below the text on narrow screens.
+
+```kotlin
+import com.dolomitebyte.alpine.components.AlpineSnackbar
+import com.dolomitebyte.alpine.components.AlpineSnackbarVariant
+
+AlpineSnackbar("Änderungen gespeichert")
+AlpineSnackbar(
+    message = "Neue Funktionen sind verfügbar.",
+    variant = AlpineSnackbarVariant.Info,
+    actionText = "Ansehen",
+    onAction = ::openUpdates,
+)
+AlpineSnackbar(
+    message = "Die Verbindung ist unterbrochen. Bitte versuche es erneut.",
+    variant = AlpineSnackbarVariant.Warning,
+    actionText = "Erneut",
+    onAction = ::retry,
+    secondaryActionText = "Später",
+    onSecondaryAction = ::remindLater,
+)
+```
+
+Use `AlpineSnackbarOverlay` to place a transient message above screen content. `Alignment.BottomCenter` is the default; `Alignment.BottomEnd` and `Alignment.BottomStart` place it in the corners. Any other alignment with a `DpOffset` supports a custom position. The default 16 dp edge padding and safe drawing insets keep it clear of screen edges and system bars. Pass `durationMillis = null` to keep it visible until you hide it yourself.
+
+```kotlin
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
+import com.dolomitebyte.alpine.components.AlpineSnackbarOverlay
+
+AlpineSnackbarOverlay(
+    visible = showSnackbar,
+    message = "Änderungen gespeichert",
+    onDismissRequest = { showSnackbar = false },
+    alignment = Alignment.BottomEnd,
+    offset = DpOffset((-8).dp, (-8).dp),
+) {
+    ScreenContent()
+}
+```
+
+The caller owns visibility. The overlay requests dismissal after four seconds by default; action callbacks run independently, so set `showSnackbar = false` in an action callback when appropriate. Snackbar actions have bounded ripple feedback. Pass `darkTheme` when the app controls its own theme.
 
 ### Inputs
 
