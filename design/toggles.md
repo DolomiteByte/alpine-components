@@ -6,10 +6,12 @@ Source: the theme control in DolomiteByte's `components/SiteHeader.tsx` and `.th
 | --- | --- |
 | Track | 56 × 32 dp pill, with a 1 dp border |
 | Thumb | 24 dp circle with a subtle shadow; 4 dp edge spacing; 24 dp travel |
-| Light state | `#FFFFFF` track, navy border at 22% opacity; `#E7F5FF` thumb and cobalt `#0054FF` sun on the right |
+| Light state | `#FFFFFF` track, navy border at 22% opacity; `#B9DDF5` thumb with a 1.5 dp `#668FB0` outline and cobalt `#0054FF` sun on the right |
 | Dark state | `#112540` track, cyan `#33D5EB` border at 65% opacity; `#F4F8FF` thumb and navy `#132B50` moon on the left |
 | Motion | 200 ms for thumb position, track, border, thumb, and icon tint |
 | Type | Manrope Semibold 14 sp for settings labels; Manrope Regular 12 sp for supporting text |
 | Touch and focus | At least 48 dp touch height; visible blue or cyan focus outline |
 
 `AlpineThemeToggle` matches the site's light-right/dark-left behavior. `AlpineToggle` reuses the palette and proportions for a general Boolean setting; its checked thumb moves right, following the usual switch convention. Both are controlled Compose components with switch semantics and English/German state descriptions. Disabled controls use 50% opacity and ignore input. The host app owns theme persistence and application.
+
+The off-state thumb has a stronger blue fill and outline than the website reference so it remains clearly distinguishable from the white track in both themes.

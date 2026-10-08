@@ -58,8 +58,9 @@ private val LightTrack = Color(0xF0FFFFFF)
 private val DarkTrack = Color(0xFF112540)
 private val LightBorder = Color(0x38132B50)
 private val DarkBorder = Color(0xA633D5EB)
-private val LightThumb = Color(0xFFE7F5FF)
+private val LightThumb = Color(0xFFB9DDF5)
 private val DarkThumb = Color(0xFFF4F8FF)
+private val LightThumbBorder = Color(0xFF668FB0)
 private val Cobalt = Color(0xFF0054FF)
 private val Navy = Color(0xFF132B50)
 private val Cyan = Color(0xFF33D5EB)
@@ -224,6 +225,11 @@ private fun AlpineToggleTrack(
         animationSpec = tween(200),
         label = "Alpine toggle thumb",
     )
+    val thumbBorderColor by animateColorAsState(
+        targetValue = if (checked) Color.Transparent else LightThumbBorder,
+        animationSpec = tween(200),
+        label = "Alpine toggle thumb border",
+    )
     val iconColor by animateColorAsState(
         targetValue = if (checked) Navy else Cobalt,
         animationSpec = tween(200),
@@ -259,7 +265,8 @@ private fun AlpineToggleTrack(
                         .size(24.dp)
                         .shadow(1.dp, CircleShape)
                         .clip(CircleShape)
-                        .background(thumbColor),
+                        .background(thumbColor)
+                        .border(1.5.dp, thumbBorderColor, CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     if (themeIcon) AlpineThemeIcon(dark = checked, color = iconColor)
