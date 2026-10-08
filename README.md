@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.8.1")
+    implementation("com.github.DolomiteByte:alpine-components:0.9.0")
 }
 ```
 
@@ -94,6 +94,51 @@ AlpineSecondaryButton(
 ```
 
 The primary button shows its Alpine Fold arrow on the right by default. `trailingIcon` replaces that arrow; `showDefaultArrow = false` removes it. The secondary button has no default icon. `enabled = false` dims either button to 50% opacity and blocks clicks. `loading = true` keeps the label, hides the leading icon, replaces right-side content with a spinner, and blocks clicks. Loading is announced to accessibility services in English or German according to the device locale. Icons alongside a text label are decorative; pass `contentDescription = null` to Compose `Icon`.
+
+### Floating action buttons
+
+`AlpineFab` accepts an icon, text, or both. Icon-only actions require a `contentDescription`; when text is present, it names the button by default. The compact icon button is a 56 dp circle; text variants are extended pills. All variants use the Alpine blue gradient and support `enabled`, `loading`, and light/dark styling.
+
+```kotlin
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
+import com.dolomitebyte.alpine.components.AlpineFab
+import com.dolomitebyte.alpine.components.AlpineFabOverlay
+
+AlpineFab(
+    onClick = ::createItem,
+    icon = { tint -> Icon(Icons.Default.Add, contentDescription = null, tint = tint) },
+    contentDescription = "Element hinzufügen",
+)
+AlpineFab(onClick = ::createItem, text = "Erstellen")
+AlpineFab(
+    onClick = ::createItem,
+    text = "Erstellen",
+    icon = { tint -> Icon(Icons.Default.Add, contentDescription = null, tint = tint) },
+)
+
+AlpineFabOverlay(
+    fab = {
+        AlpineFab(
+            onClick = ::createItem,
+            icon = { tint -> Icon(Icons.Default.Add, contentDescription = null, tint = tint) },
+            contentDescription = "Element hinzufügen",
+        )
+    },
+    alignment = Alignment.BottomEnd, // or Alignment.BottomStart
+) {
+    Box(Modifier.fillMaxSize()) { /* screen content */ }
+}
+```
+
+`AlpineFabOverlay` floats the button over its content. `Alignment.BottomEnd` and `Alignment.BottomStart` place it in the bottom corners; any other `Alignment` plus `offset = DpOffset(x, y)` gives a custom position. The default 16 dp edge padding and safe drawing insets keep the FAB clear of system bars. Pass `windowInsets = WindowInsets(0, 0, 0, 0)` if the parent already handles them. Increase `edgePadding` or use a negative vertical offset to place it above bottom tabs. The content itself is not inset by the overlay.
 
 ### Inputs
 
@@ -267,7 +312,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 

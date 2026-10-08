@@ -68,7 +68,7 @@ internal fun AlpineButtonContent(
 }
 
 @Composable
-private fun AlpineButtonLoadingIndicator(color: Color) {
+internal fun AlpineButtonLoadingIndicator(color: Color) {
     val rotation by rememberInfiniteTransition(label = "Alpine loading").animateFloat(
         initialValue = 0f,
         targetValue = 360f,
