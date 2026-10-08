@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -489,6 +490,7 @@ private fun AlpinePasswordVisibilityButton(
     tint: Color,
     onClick: () -> Unit,
 ) {
+    val interactions = remember { MutableInteractionSource() }
     val description = stringResource(
         if (visible) R.string.alpine_password_hide else R.string.alpine_password_show,
     )
@@ -497,7 +499,13 @@ private fun AlpinePasswordVisibilityButton(
             .size(48.dp)
             .semantics { contentDescription = description }
             .clip(CircleShape)
-            .clickable(enabled = enabled, role = Role.Button, onClick = onClick),
+            .clickable(
+                interactionSource = interactions,
+                indication = ripple(color = tint),
+                enabled = enabled,
+                role = Role.Button,
+                onClick = onClick,
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Canvas(Modifier.size(24.dp).clearAndSetSemantics {}) {

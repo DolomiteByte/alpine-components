@@ -20,9 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -283,10 +285,11 @@ private fun AlpineDialogCloseButton(onClick: () -> Unit, darkTheme: Boolean) {
                     )
                 }
             }
+            .clip(CircleShape)
             .semantics { contentDescription = closeLabel }
             .clickable(
                 interactionSource = interactions,
-                indication = null,
+                indication = ripple(color = focusColor),
                 role = Role.Button,
                 onClick = onClick,
             ),

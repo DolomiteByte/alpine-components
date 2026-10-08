@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -22,7 +23,9 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -103,6 +106,7 @@ fun AlpineBottomTabs(
             items.forEachIndexed { index, item ->
                 val isSelected = index == selectedIndex
                 val iconColor = if (isSelected) Color.White else inactive
+                val interactions = remember { MutableInteractionSource() }
                 Box(
                     modifier = Modifier
                         .then(if (isSelected) Modifier.widthIn(max = maxSelectedWidth) else Modifier)
@@ -118,6 +122,14 @@ fun AlpineBottomTabs(
                             selected = isSelected,
                             enabled = item.enabled,
                             role = Role.Tab,
+                            interactionSource = interactions,
+                            indication = ripple(
+                                color = when {
+                                    isSelected -> Color.White
+                                    darkTheme -> Color(0xFF33D5EB)
+                                    else -> GradientEnd
+                                },
+                            ),
                             onClick = { onTabSelected(index) },
                         )
                         .padding(horizontal = if (isSelected) 16.dp else 12.dp, vertical = 10.dp)

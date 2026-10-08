@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.10.1")
+    implementation("com.github.DolomiteByte:alpine-components:0.10.2")
 }
 ```
 
@@ -55,6 +55,8 @@ AlpineSecondaryButton(
 ```
 
 Both buttons provide click and disabled semantics for accessibility. Their light and dark previews, plus disabled previews, live alongside the components in `android/src/main`.
+
+Clickable Alpine actions use a bounded ripple with a color matched to the component: primary and floating buttons, secondary buttons, bottom tabs, the alert-dialog close icon, and the password visibility icon. Disabled and loading actions do not show a ripple. The dialog close icon remains transparent until pressed.
 
 ### Button states and icons
 
@@ -340,7 +342,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/alert-dialog.md](design/alert-dialog.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/alert-dialog.md](design/alert-dialog.md), [design/ripple.md](design/ripple.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 
