@@ -14,5 +14,11 @@ Source: the DolomiteByte website's contact form and `.form-field` style, as impl
 | Focus | Label and 3 dp underline change over 180 ms to `#0054FF` in light mode or `#33D5EB` in dark mode |
 | Text field | 48 dp minimum edit area; 9 dp top and 14 dp bottom padding |
 | Message area | Five lines and at least 136 dp edit area; grows with content |
+| Optional icons | 20 dp slots to the left or right of the text, with a 12 dp gap; decorative to accessibility services |
+| Password eye | 24 dp icon in a 48 dp touch target; starts masked with `*`, toggles to clear text |
 
-The site relies on browser validation for its required fields. The Android library lets the host show a validation error with `isError` and `errorMessage`; the label and underline become red, and the message is visible and announced. Disabled fields have 50% opacity and cannot be edited. Read-only fields keep the standard appearance. These are native form states added for app use; the website does not show separate error or disabled styles.
+The site relies on browser validation for its required fields. The Android library lets the host show a validation error with `isError` and `errorMessage`; the label and underline become red, and the message is visible and announced. Disabled fields have 50% opacity and cannot be edited. Read-only fields keep the standard appearance.
+
+Number fields request a numeric keyboard. They accept digits, one decimal separator (`.` or `,`) when `allowDecimal = true`, and a leading minus when `allowNegative = true`. They preserve incomplete values such as `-` and `1,` for editing. The caller owns parsing and range validation. Password fields request a password keyboard and use `PasswordVisualTransformation('*')` until the user activates the eye button. That button has localized show/hide descriptions and is disabled with its field.
+
+Number and password types, icon slots, and error or disabled styles are native form extensions; the website does not show those separate variants.

@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, text and email inputs, a message area, and bottom tabs for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, text, email, number, and password inputs, a message area, and bottom tabs for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.6.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.7.0")
 }
 ```
 
@@ -97,7 +97,7 @@ The primary button shows its Alpine Fold arrow on the right by default. `trailin
 
 ### Inputs
 
-The DolomiteByte contact form has single-line text fields for name and subject, an email field, and a five-line message area. `AlpineTextField`, `AlpineEmailField`, and `AlpineTextArea` reproduce their underlined Manrope style in light and dark mode. Labels and underlines take the Alpine accent color on focus. The email field requests an email keyboard; the message area accepts multiple lines.
+The DolomiteByte contact form has single-line text fields for name and subject, an email field, and a five-line message area. `AlpineTextField`, `AlpineEmailField`, and `AlpineTextArea` reproduce their underlined Manrope style in light and dark mode. `AlpineNumberField` and `AlpinePasswordField` extend that design for native forms. Labels and underlines take the Alpine accent color on focus.
 
 ```kotlin
 import androidx.compose.foundation.layout.Arrangement
@@ -131,7 +131,51 @@ Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
 }
 ```
 
-All inputs are controlled: pass their current `value` and update it in `onValueChange`. Use `enabled = false` for a disabled field and `readOnly = true` for a non-editable value. The host app decides when a required field is invalid and passes `isError = true`; `errorMessage` is shown below the underline and announced to accessibility services. An error without a message receives a localized generic announcement. The text field accepts custom `keyboardOptions` and `keyboardActions`, the email field exposes `imeAction`, and the message area accepts `minLines`.
+The new variants use the same controlled API:
+
+```kotlin
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.dolomitebyte.alpine.components.AlpineNumberField
+import com.dolomitebyte.alpine.components.AlpinePasswordField
+import com.dolomitebyte.alpine.components.AlpineTextField
+
+var amount by rememberSaveable { mutableStateOf("") }
+var password by rememberSaveable { mutableStateOf("") }
+
+AlpineNumberField(
+    value = amount,
+    onValueChange = { amount = it },
+    label = "Betrag",
+    placeholder = "0,00",
+    allowDecimal = true,
+    allowNegative = true,
+)
+AlpinePasswordField(
+    value = password,
+    onValueChange = { password = it },
+    label = "Passwort",
+    placeholder = "Passwort eingeben",
+)
+AlpineTextField(
+    value = "Lukas",
+    onValueChange = {},
+    label = "Name",
+    leadingIcon = { tint -> Icon(Icons.Default.Person, null, tint = tint, modifier = Modifier.size(20.dp)) },
+    trailingIcon = { tint -> Icon(Icons.Default.Check, null, tint = tint, modifier = Modifier.size(20.dp)) },
+)
+```
+
+All inputs are controlled: pass their current `value` and update it in `onValueChange`. Use `enabled = false` for a disabled field and `readOnly = true` for a non-editable value. The host app decides when a field is invalid and passes `isError = true`; `errorMessage` is shown below the underline and announced to accessibility services. An error without a message receives a localized generic announcement. Every input accepts decorative `leadingIcon` and `trailingIcon` slots that receive the current tint. The password eye remains on the right even when a trailing icon is supplied; it toggles between stars and clear text, with localized accessibility labels. The number field filters edits to digits and optionally one `.` or `,` separator and a leading minus sign, while keeping the value as a `String` so partially entered numbers remain editable. The email field requests an email keyboard, the text field accepts custom `keyboardOptions`, and the message area accepts `minLines`.
 
 ### Bottom tabs
 
