@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, alert dialogs, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.9.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.10.0")
 }
 ```
 
@@ -139,6 +139,34 @@ AlpineFabOverlay(
 ```
 
 `AlpineFabOverlay` floats the button over its content. `Alignment.BottomEnd` and `Alignment.BottomStart` place it in the bottom corners; any other `Alignment` plus `offset = DpOffset(x, y)` gives a custom position. The default 16 dp edge padding and safe drawing insets keep the FAB clear of system bars. Pass `windowInsets = WindowInsets(0, 0, 0, 0)` if the parent already handles them. Increase `edgePadding` or use a negative vertical offset to place it above bottom tabs. The content itself is not inset by the overlay.
+
+### Alert dialog
+
+`AlpineAlertDialog` shows a modal Alpine panel with a title, a 48 dp icon-only close button, a scrollable Compose content area, and primary and optional secondary actions. The actions reuse `AlpinePrimaryButton` and `AlpineSecondaryButton`. They sit beside each other when space allows and stack on narrow screens. Long content scrolls while the header and actions remain visible.
+
+```kotlin
+import com.dolomitebyte.alpine.components.AlpineAlertDialog
+import com.dolomitebyte.alpine.components.AlpineAlertDialogText
+
+if (showDialog) {
+    AlpineAlertDialog(
+        title = "Änderungen speichern?",
+        primaryActionText = "Speichern",
+        onPrimaryAction = {
+            saveChanges()
+            showDialog = false
+        },
+        secondaryActionText = "Abbrechen",
+        onSecondaryAction = { showDialog = false },
+        onDismissRequest = { showDialog = false },
+    ) {
+        AlpineAlertDialogText("Deine Änderungen werden sofort sichtbar.")
+        // Add other Compose content here when needed.
+    }
+}
+```
+
+The caller owns dialog visibility. The close button, outside tap, and Back call `onDismissRequest`; action callbacks run independently. Omit both secondary parameters for a single-action dialog. `primaryActionEnabled`, `primaryActionLoading`, `secondaryActionEnabled`, and `secondaryActionLoading` control the action states. Pass `darkTheme` for an app-controlled theme; `AlpineAlertDialogText` follows it automatically inside the dialog. `AlpineAlertDialogContainer` provides the same panel without the modal wrapper for custom overlays or previews.
 
 ### Inputs
 
@@ -312,7 +340,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/alert-dialog.md](design/alert-dialog.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 

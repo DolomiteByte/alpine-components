@@ -7,4 +7,5 @@
     <string name="alpine_toggle_off">Aus</string>
     <string name="alpine_theme_dark_mode">Dunkelmodus</string>
     <string name="alpine_theme_light_mode">Hellmodus</string>
+    <string name="alpine_dialog_close">Dialog schließen</string>
 </resources>

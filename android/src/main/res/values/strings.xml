@@ -7,4 +7,5 @@
     <string name="alpine_toggle_off">Off</string>
     <string name="alpine_theme_dark_mode">Dark mode</string>
     <string name="alpine_theme_light_mode">Light mode</string>
+    <string name="alpine_dialog_close">Close dialog</string>
 </resources>
