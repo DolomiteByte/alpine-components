@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.10.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.10.1")
 }
 ```
 
@@ -142,7 +142,7 @@ AlpineFabOverlay(
 
 ### Alert dialog
 
-`AlpineAlertDialog` shows a modal Alpine panel with a title, a 48 dp icon-only close button, a scrollable Compose content area, and primary and optional secondary actions. The actions reuse `AlpinePrimaryButton` and `AlpineSecondaryButton`. They sit beside each other when space allows and stack on narrow screens. Long content scrolls while the header and actions remain visible.
+`AlpineAlertDialog` shows a modal Alpine panel with a title, a 48 dp icon-only close target without a background or border, a scrollable Compose content area, and primary and optional secondary actions. The actions reuse `AlpinePrimaryButton` and `AlpineSecondaryButton`. They sit beside each other when space allows and stack on narrow screens. Long content scrolls while the header and actions remain visible.
 
 ```kotlin
 import com.dolomitebyte.alpine.components.AlpineAlertDialog

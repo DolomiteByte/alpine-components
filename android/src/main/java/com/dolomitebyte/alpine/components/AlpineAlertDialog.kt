@@ -2,7 +2,6 @@ package com.dolomitebyte.alpine.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -64,12 +63,9 @@ private val LightTitle = Color(0xFF132B50)
 private val DarkTitle = Color(0xFFF4F8FF)
 private val LightBody = Color(0xFF455A73)
 private val DarkBody = Color(0xFFC9D9EA)
-private val LightCloseBackground = Color(0xFFF5F8FF)
-private val DarkCloseBackground = Color(0xFF202932)
 private val LightFocus = Color(0xFF0054FF)
 private val DarkFocus = Color(0xFF33D5EB)
 private val DialogShape = RoundedCornerShape(24.dp)
-private val CloseShape = RoundedCornerShape(12.dp)
 private val Manrope = FontFamily(
     Font(R.font.manrope_regular, FontWeight.Normal),
     Font(R.font.manrope_bold, FontWeight.Bold),
@@ -287,13 +283,10 @@ private fun AlpineDialogCloseButton(onClick: () -> Unit, darkTheme: Boolean) {
                     )
                 }
             }
-            .clip(CloseShape)
-            .background(if (darkTheme) DarkCloseBackground else LightCloseBackground)
-            .border(1.dp, if (darkTheme) DarkBorder else LightBorder, CloseShape)
             .semantics { contentDescription = closeLabel }
             .clickable(
                 interactionSource = interactions,
-                indication = LocalIndication.current,
+                indication = null,
                 role = Role.Button,
                 onClick = onClick,
             ),
