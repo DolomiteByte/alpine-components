@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.ripple
@@ -71,7 +70,6 @@ private val SnackbarFont = FontFamily(
 private data class SnackbarColors(
     val surface: Color,
     val text: Color,
-    val iconBackground: Color,
     val icon: Color,
     val actionBackground: Color,
     val actionText: Color,
@@ -82,34 +80,34 @@ private data class SnackbarColors(
 private fun snackbarColors(variant: AlpineSnackbarVariant, dark: Boolean): SnackbarColors = when (variant) {
     AlpineSnackbarVariant.Default -> if (dark) SnackbarColors(
         surface = Color(0xFF181D23), text = Color(0xFFEDF3FB),
-        iconBackground = Color(0xFF253A50), icon = Color(0xFF6DE1EF),
+        icon = Color(0xFF6DE1EF),
         actionBackground = Color(0xFF0A5BE3), actionText = Color.White,
         secondaryBackground = Color(0xFF253A50), secondaryText = Color(0xFFC1EFFF),
     ) else SnackbarColors(
         surface = Color.White, text = Color(0xFF24344B),
-        iconBackground = Color(0xFFEAF1FF), icon = Color(0xFF0054FF),
+        icon = Color(0xFF0054FF),
         actionBackground = Color(0xFF0054FF), actionText = Color.White,
         secondaryBackground = Color(0xFFEDF3FF), secondaryText = Color(0xFF0054FF),
     )
     AlpineSnackbarVariant.Info -> if (dark) SnackbarColors(
         surface = Color(0xFF102C3D), text = Color(0xFFE3F8FF),
-        iconBackground = Color(0xFF164A61), icon = Color(0xFF78DCF5),
+        icon = Color(0xFF78DCF5),
         actionBackground = Color(0xFF087CB5), actionText = Color.White,
         secondaryBackground = Color(0xFF1C4557), secondaryText = Color(0xFFB9EFFF),
     ) else SnackbarColors(
         surface = Color(0xFFEBF7FF), text = Color(0xFF163C56),
-        iconBackground = Color(0xFFCDEEFF), icon = Color(0xFF086C9C),
+        icon = Color(0xFF086C9C),
         actionBackground = Color(0xFF087CB5), actionText = Color.White,
         secondaryBackground = Color(0xFFD8EFFC), secondaryText = Color(0xFF075781),
     )
     AlpineSnackbarVariant.Warning -> if (dark) SnackbarColors(
         surface = Color(0xFF352719), text = Color(0xFFFFF1D7),
-        iconBackground = Color(0xFF5C3B1F), icon = Color(0xFFFFD08B),
+        icon = Color(0xFFFFD08B),
         actionBackground = Color(0xFFA95E0D), actionText = Color.White,
         secondaryBackground = Color(0xFF5C3D20), secondaryText = Color(0xFFFFE4BE),
     ) else SnackbarColors(
         surface = Color(0xFFFFF5E7), text = Color(0xFF5F3E19),
-        iconBackground = Color(0xFFFFE3B6), icon = Color(0xFF9B5808),
+        icon = Color(0xFF9B5808),
         actionBackground = Color(0xFFA55E08), actionText = Color.White,
         secondaryBackground = Color(0xFFFFEBCB), secondaryText = Color(0xFF874900),
     )
@@ -162,7 +160,7 @@ fun AlpineSnackbar(
         val messageMaxWidth = when {
             inlineActions && bothActions -> 220.dp
             inlineActions -> 310.dp
-            else -> maxWidth - 24.dp - if (hasIcon) 46.dp else 0.dp
+            else -> maxWidth - 24.dp - if (hasIcon) 34.dp else 0.dp
         }.coerceAtLeast(80.dp)
 
         Column(
@@ -176,9 +174,7 @@ fun AlpineSnackbar(
                 if (hasIcon) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(colors.iconBackground)
+                            .size(24.dp)
                             .clearAndSetSemantics {},
                         contentAlignment = Alignment.Center,
                     ) {

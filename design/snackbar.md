@@ -8,7 +8,7 @@
 | Info | Ice blue `#EBF7FF` | Deep teal `#102C3D` | Clear blue / cyan |
 | Warning | Pale amber `#FFF5E7` | Warm charcoal `#352719` | Amber |
 
-Info and warning show a built-in icon in a filled circular background. Set `showIcon = false` to hide it. Supply the `icon` slot for any variant, including Default; it receives the variant's icon tint. The icon is decorative to accessibility services and has no border.
+Info and warning show a standalone tinted icon without a background or border. Set `showIcon = false` to hide it. Supply the `icon` slot for any variant, including Default; it receives the variant's icon tint. The icon is decorative to accessibility services.
 
 The main and secondary action buttons are optional independently. Both have filled, borderless shapes, at least a 48 dp touch target, and a bounded ripple. Labels and callbacks must be supplied together. Multiline messages wrap naturally. At wide widths actions sit beside the message; at narrower widths they move below it. A short snackbar stays as wide as its content, up to 560 dp.
 
