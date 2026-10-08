@@ -3,4 +3,8 @@
     <string name="alpine_input_invalid">Invalid input</string>
     <string name="alpine_password_show">Show password</string>
     <string name="alpine_password_hide">Hide password</string>
+    <string name="alpine_toggle_on">On</string>
+    <string name="alpine_toggle_off">Off</string>
+    <string name="alpine_theme_dark_mode">Dark mode</string>
+    <string name="alpine_theme_light_mode">Light mode</string>
 </resources>

@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, text, email, number, and password inputs, a message area, and bottom tabs for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.7.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.8.0")
 }
 ```
 
@@ -222,6 +222,37 @@ AlpineBottomTabs(
 
 Place the bar in a `Scaffold`'s `bottomBar`. It applies the Android navigation bar inset by default. Set `darkTheme` if your app theme differs from the device setting, or pass `windowInsets` if a parent handles that inset. Each tab has selection and disabled semantics; the icon is decorative and the label names the destination. The example icons use the same Material 3 and Material icons dependencies noted above.
 
+### Toggles
+
+`AlpineToggle` is a controlled settings switch with a label and optional supporting text. `AlpineThemeToggle` follows the DolomiteByte header switch: the sun sits on the right in light mode, and the moon moves left in dark mode. Both use the site's 56 × 32 dp track, 24 dp thumb, and 200 ms transition. The whole row has a 48 dp minimum touch height, switch semantics, localized state descriptions, and a disabled state.
+
+```kotlin
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.dolomitebyte.alpine.components.AlpineThemeToggle
+import com.dolomitebyte.alpine.components.AlpineToggle
+
+var notifications by rememberSaveable { mutableStateOf(true) }
+var darkMode by rememberSaveable { mutableStateOf(false) }
+
+AlpineToggle(
+    checked = notifications,
+    onCheckedChange = { notifications = it },
+    label = "Benachrichtigungen",
+    supportingText = "Wichtige Updates erhalten",
+    darkTheme = darkMode,
+)
+AlpineThemeToggle(
+    darkMode = darkMode,
+    onDarkModeChange = { darkMode = it },
+    showModeLabel = true,
+)
+```
+
+The host app applies `darkMode` to its theme and passes it to the other Alpine components. The toggle only reports the requested change. `enabled = false` dims the control and blocks input. The generic switch places its thumb on the right when checked; the theme switch follows the site's dark-left/light-right convention.
+
 ## Development
 
 Build and publish the Android AAR to Maven Local:
@@ -236,7 +267,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/inputs.md](design/inputs.md), and [design/bottom-tabs.md](design/bottom-tabs.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 
