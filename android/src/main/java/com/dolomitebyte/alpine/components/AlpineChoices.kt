@@ -379,11 +379,7 @@ private fun AlpineChoiceCard(
     require(title.isNotBlank()) { "Alpine choice cards need a title" }
     val interactions = remember { MutableInteractionSource() }
     val focused by interactions.collectIsFocusedAsState()
-    val accent = when {
-        darkTheme && radio -> ChoiceDarkAccent
-        darkTheme -> ChoiceDarkInputAccent
-        else -> ChoiceBlue
-    }
+    val accent = if (darkTheme) ChoiceDarkInputAccent else ChoiceBlue
     val muted = if (darkTheme) ChoiceDarkMuted else ChoiceLightMuted
     val surfaceStart by animateColorAsState(
         targetValue = when {
@@ -432,10 +428,10 @@ private fun AlpineChoiceCard(
             .defaultMinSize(minHeight = 76.dp)
             .alpha(if (enabled) 1f else 0.48f)
             .shadow(
-                elevation = if (focused) 10.dp else if (selected) 6.dp else 0.dp,
+                elevation = if (focused) 4.dp else if (selected) 2.dp else 0.dp,
                 shape = ChoiceCardShape,
-                ambientColor = accent.copy(alpha = 0.32f),
-                spotColor = accent.copy(alpha = 0.32f),
+                ambientColor = accent.copy(alpha = 0.10f),
+                spotColor = accent.copy(alpha = 0.10f),
             )
             .clip(ChoiceCardShape)
             .background(Brush.horizontalGradient(listOf(surfaceStart, surfaceEnd)))
