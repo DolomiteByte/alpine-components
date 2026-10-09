@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.11.2")
+    implementation("com.github.DolomiteByte:alpine-components:0.11.3")
 }
 ```
 

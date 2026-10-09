@@ -143,6 +143,7 @@ fun AlpineSnackbar(
 
     val colors = snackbarColors(variant, darkTheme)
     val hasIcon = showIcon
+    val trailingPadding = if (hasIcon) 18.dp else 12.dp
     val hasActions = actionText != null || secondaryActionText != null
     val bothActions = actionText != null && secondaryActionText != null
 
@@ -159,11 +160,11 @@ fun AlpineSnackbar(
         val messageMaxWidth = when {
             inlineActions && bothActions -> 220.dp
             inlineActions -> 310.dp
-            else -> maxWidth - 24.dp - if (hasIcon) 34.dp else 0.dp
+            else -> maxWidth - 12.dp - trailingPadding - if (hasIcon) 34.dp else 0.dp
         }.coerceAtLeast(80.dp)
 
         Column(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(start = 12.dp, top = 12.dp, end = trailingPadding, bottom = 12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
