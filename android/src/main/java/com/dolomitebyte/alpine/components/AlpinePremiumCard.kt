@@ -1,7 +1,13 @@
 package com.dolomitebyte.alpine.components
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -72,6 +79,7 @@ private val PremiumFont = FontFamily(
  * The entire card is one action. Its visual call to action shares [onClick] and does not
  * create a second touch target. [icon] receives the Alpine cyan tint; when omitted a star
  * is drawn. [darkTheme] controls the border and shadow while retaining the brand gradient.
+ * [animateGradient] slowly shifts the background; pass false for a static surface.
  */
 @Composable
 fun AlpinePremiumCard(
@@ -85,6 +93,7 @@ fun AlpinePremiumCard(
     icon: (@Composable (Color) -> Unit)? = null,
     enabled: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    animateGradient: Boolean = true,
 ) {
     require(title.isNotBlank()) { "AlpinePremiumCard needs a title" }
     require(actionText.isNotBlank()) { "AlpinePremiumCard needs actionText" }
@@ -94,6 +103,19 @@ fun AlpinePremiumCard(
     val pressed by interactions.collectIsPressedAsState()
     val hovered by interactions.collectIsHoveredAsState()
     val focused by interactions.collectIsFocusedAsState()
+    val gradientDrift = if (animateGradient && enabled) {
+        rememberInfiniteTransition(label = "Alpine premium gradient").animateFloat(
+            initialValue = -0.08f,
+            targetValue = 0.08f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 20_000, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
+            label = "Alpine premium gradient drift",
+        )
+    } else {
+        null
+    }
     val elevation by animateDpAsState(
         targetValue = when {
             !enabled || pressed -> 0.dp
@@ -110,13 +132,18 @@ fun AlpinePremiumCard(
             .alpha(if (enabled) 1f else 0.5f)
             .shadow(elevation, PremiumCardShape)
             .clip(PremiumCardShape)
-            .background(
-                Brush.linearGradient(
-                    0f to PremiumBlueStart,
-                    0.62f to PremiumBlueEnd,
-                    1f to PremiumCyan,
-                ),
-            )
+            .drawBehind {
+                val drift = gradientDrift?.value ?: 0f
+                drawRect(
+                    brush = Brush.linearGradient(
+                        0f to PremiumBlueStart,
+                        0.62f to PremiumBlueEnd,
+                        1f to PremiumCyan,
+                        start = Offset(size.width * drift, 0f),
+                        end = Offset(size.width * (1f + drift), size.height),
+                    ),
+                )
+            }
             .border(
                 if (focused && enabled) 2.dp else 1.dp,
                 if (focused && enabled) PremiumCyan else if (darkTheme) PremiumDarkBorder else PremiumLightBorder,

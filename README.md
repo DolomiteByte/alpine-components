@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.12.1")
+    implementation("com.github.DolomiteByte:alpine-components:0.12.2")
 }
 ```
 
@@ -144,7 +144,7 @@ AlpineFabOverlay(
 
 ### Premium card
 
-`AlpinePremiumCard` follows TheraBuddy's compact premium drawer card with an Alpine blue-to-cyan gradient, white text, and a white action area. The background moves from `#0A5BE3` through `#0054FF` to `#33D5EB`. The full card is one accessible button with a bounded ripple; the action area is its visual call to action. It accepts custom copy, benefits, and an optional icon slot. The gradient stays the same in light and dark mode while the border and shadow adapt.
+`AlpinePremiumCard` follows TheraBuddy's compact premium drawer card with an Alpine blue-to-cyan gradient, white text, and a white action area. The background moves from `#0A5BE3` through `#0054FF` to `#33D5EB` and drifts gently over a 40-second round trip. Pass `animateGradient = false` for a static background. The full card is one accessible button with a bounded ripple; the action area is its visual call to action. It accepts custom copy, benefits, and an optional icon slot. The gradient stays the same in light and dark mode while the border and shadow adapt.
 
 ```kotlin
 import com.dolomitebyte.alpine.components.AlpinePremiumCard
