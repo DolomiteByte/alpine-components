@@ -8,4 +8,6 @@
     <string name="alpine_theme_dark_mode">Dunkelmodus</string>
     <string name="alpine_theme_light_mode">Hellmodus</string>
     <string name="alpine_dialog_close">Dialog schließen</string>
+    <string name="alpine_dropdown_placeholder">Auswählen</string>
+    <string name="alpine_dropdown_empty">Keine Optionen verfügbar</string>
 </resources>

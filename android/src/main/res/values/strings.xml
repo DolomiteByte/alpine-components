@@ -8,4 +8,6 @@
     <string name="alpine_theme_dark_mode">Dark mode</string>
     <string name="alpine_theme_light_mode">Light mode</string>
     <string name="alpine_dialog_close">Close dialog</string>
+    <string name="alpine_dropdown_placeholder">Select</string>
+    <string name="alpine_dropdown_empty">No options available</string>
 </resources>

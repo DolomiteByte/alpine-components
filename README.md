@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, a premium card, alert dialogs, snackbars, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, a premium card, alert dialogs, snackbars, text, email, number, and password inputs, a message area, dropdowns, radio and checkbox cards, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.12.6")
+    implementation("com.github.DolomiteByte:alpine-components:0.13.0")
 }
 ```
 
@@ -236,6 +236,60 @@ AlpineSnackbarOverlay(
 
 The caller owns visibility. The overlay requests dismissal after four seconds by default; action callbacks run independently, so set `showSnackbar = false` in an action callback when appropriate. Snackbar actions have bounded ripple feedback. Pass `darkTheme` when the app controls its own theme.
 
+### Dropdown and selection cards
+
+`AlpineDropdownField` uses the outlined, floating-label form style from the reference. On Android, tapping the field opens a Material 3 modal bottom sheet with the available options. The host owns the selected ID; tapping an option calls `onSelected` and closes the sheet. Back, a downward swipe, or tapping outside dismisses it without changing the value. Empty lists, disabled options, a disabled field, and error messages are supported.
+
+`AlpineRadioCard` represents one option in a single-choice group. `AlpineCheckboxCard` is the matching multi-choice variant. Both cards have an optional supporting line, light and dark styles, enabled and selected states, accessible selection semantics, and ripple feedback. `AlpineSelectionGroup` adds the heading and spacing shown in the design.
+
+```kotlin
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.dolomitebyte.alpine.components.AlpineCheckboxCard
+import com.dolomitebyte.alpine.components.AlpineDropdownField
+import com.dolomitebyte.alpine.components.AlpineDropdownOption
+import com.dolomitebyte.alpine.components.AlpineRadioCard
+import com.dolomitebyte.alpine.components.AlpineSelectionGroup
+
+var unit by rememberSaveable { mutableStateOf("tablets") }
+var doseType by rememberSaveable { mutableStateOf("regular") }
+var reminders by rememberSaveable { mutableStateOf(false) }
+
+AlpineDropdownField(
+    label = "Unit",
+    options = listOf(
+        AlpineDropdownOption("tablets", "Tablet(s)"),
+        AlpineDropdownOption("drops", "Drop(s)"),
+    ),
+    selectedId = unit,
+    onSelected = { unit = it },
+)
+AlpineSelectionGroup("Dose type") {
+    AlpineRadioCard(
+        selected = doseType == "regular",
+        onClick = { doseType = "regular" },
+        title = "Regular",
+        supportingText = "For fixed times, days of the week, or intervals",
+    )
+    AlpineRadioCard(
+        selected = doseType == "as_needed",
+        onClick = { doseType = "as_needed" },
+        title = "As needed",
+        supportingText = "No dose is required; actual doses are still recorded",
+    )
+}
+AlpineCheckboxCard(
+    checked = reminders,
+    onCheckedChange = { reminders = it },
+    title = "Reminders",
+    supportingText = "Notify me when a dose is due",
+)
+```
+
+Pass `darkTheme` when an app controls its own theme. Option IDs must be unique, and selected IDs should match one of them. Cards and the dropdown use controlled state so the caller can validate and persist form choices.
+
 ### Inputs
 
 The DolomiteByte contact form has single-line text fields for name and subject, an email field, and a five-line message area. `AlpineTextField`, `AlpineEmailField`, and `AlpineTextArea` reproduce their underlined Manrope style in light and dark mode. `AlpineNumberField` and `AlpinePasswordField` extend that design for native forms. Labels and underlines take the Alpine accent color on focus.
@@ -408,7 +462,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/alert-dialog.md](design/alert-dialog.md), [design/ripple.md](design/ripple.md), [design/inputs.md](design/inputs.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/alert-dialog.md](design/alert-dialog.md), [design/ripple.md](design/ripple.md), [design/inputs.md](design/inputs.md), [design/choices.md](design/choices.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 
