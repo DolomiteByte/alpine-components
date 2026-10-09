@@ -10,7 +10,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -67,8 +66,6 @@ private val PremiumBlueEnd = Color(0xFF0054FF)
 private val PremiumCyan = Color(0xFF33D5EB)
 private val PremiumCyanLight = Color(0xFFC8F7FF)
 private val PremiumActionInk = Color(0xFF074BD1)
-private val PremiumLightBorder = Color(0xFF074BD1)
-private val PremiumDarkBorder = Color(0x736CAAFF)
 private val PremiumFont = FontFamily(
     Font(R.font.manrope_regular, FontWeight.Normal),
     Font(R.font.manrope_semibold, FontWeight.SemiBold),
@@ -80,8 +77,8 @@ private val PremiumFont = FontFamily(
  *
  * The entire card is one action. Its visual call to action shares [onClick] and does not
  * create a second touch target. [icon] receives the Alpine cyan tint in a translucent circle;
- * when omitted, a transparent star is cut out of a white circle. [darkTheme] controls the border
- * and shadow while retaining the brand gradient.
+ * when omitted, a transparent star is cut out of a white circle. [darkTheme] controls the
+ * shadow while retaining the brand gradient.
  * [animateGradient] slowly shifts the background; pass false for a static surface.
  */
 @Composable
@@ -122,6 +119,7 @@ fun AlpinePremiumCard(
     val elevation by animateDpAsState(
         targetValue = when {
             !enabled || pressed -> 0.dp
+            focused -> if (darkTheme) 20.dp else 16.dp
             hovered -> if (darkTheme) 16.dp else 12.dp
             darkTheme -> 12.dp
             else -> 8.dp
@@ -133,7 +131,12 @@ fun AlpinePremiumCard(
         modifier = modifier
             .fillMaxWidth()
             .alpha(if (enabled) 1f else 0.5f)
-            .shadow(elevation, PremiumCardShape)
+            .shadow(
+                elevation = elevation,
+                shape = PremiumCardShape,
+                ambientColor = if (focused && enabled) PremiumCyan else Color.Black,
+                spotColor = if (focused && enabled) PremiumCyan else Color.Black,
+            )
             .clip(PremiumCardShape)
             .drawBehind {
                 val drift = gradientDrift?.value ?: 0f
@@ -147,11 +150,6 @@ fun AlpinePremiumCard(
                     ),
                 )
             }
-            .border(
-                if (focused && enabled) 2.dp else 1.dp,
-                if (focused && enabled) PremiumCyan else if (darkTheme) PremiumDarkBorder else PremiumLightBorder,
-                PremiumCardShape,
-            )
             .hoverable(interactionSource = interactions, enabled = enabled)
             .clickable(
                 interactionSource = interactions,
