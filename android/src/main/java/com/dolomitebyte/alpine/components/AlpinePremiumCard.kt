@@ -40,11 +40,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.TextStyle
@@ -288,22 +290,25 @@ private fun PremiumStar(modifier: Modifier = Modifier) {
 
 @Composable
 private fun PremiumCheck(modifier: Modifier = Modifier) {
-    Canvas(modifier) {
-        val stroke = 1.7.dp.toPx()
-        drawCircle(Color.White, radius = size.minDimension / 2f - stroke / 2f, style = Stroke(stroke))
+    // Confine Clear to the icon layer so the card gradient shows through the check.
+    Canvas(modifier.graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }) {
+        val stroke = 2.dp.toPx()
+        drawCircle(Color.White, radius = size.minDimension / 2f)
         drawLine(
-            Color.White,
+            Color.Transparent,
             Offset(size.width * 0.25f, size.height * 0.52f),
             Offset(size.width * 0.43f, size.height * 0.68f),
             stroke,
             cap = StrokeCap.Round,
+            blendMode = BlendMode.Clear,
         )
         drawLine(
-            Color.White,
+            Color.Transparent,
             Offset(size.width * 0.43f, size.height * 0.68f),
             Offset(size.width * 0.76f, size.height * 0.33f),
             stroke,
             cap = StrokeCap.Round,
+            blendMode = BlendMode.Clear,
         )
     }
 }

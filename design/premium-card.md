@@ -10,7 +10,7 @@ Source layout: TheraBuddy's `PremiumDrawerCard`, adapted as a reusable Compose c
 | Dark border | 1 dp `rgba(108,170,255,0.45)` |
 | Primary text | White Manrope Bold; title 17 sp / 23 sp line height |
 | Supporting text | White Manrope; 13 sp / 20 sp line height |
-| Accent | Alpine cyan `#33D5EB` for the star; white benefit checks and rings; pale tint `#C8F7FF` for the small eyebrow |
+| Accent | Alpine cyan `#33D5EB` for the star; solid white benefit circles with transparent check cutouts; pale tint `#C8F7FF` for the small eyebrow |
 | Call to action | White 48 dp minimum-height area; Alpine blue `#074BD1` label and arrow |
 | Interaction | Entire card has one button role and a bounded white ripple; disabled state blocks clicks |
 
