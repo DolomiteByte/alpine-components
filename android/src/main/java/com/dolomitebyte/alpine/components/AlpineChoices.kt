@@ -111,7 +111,8 @@ data class AlpineDropdownOption(
 /**
  * An outlined, controlled dropdown. Tapping it opens Android's Material 3 modal bottom sheet.
  * The host owns [selectedId] and updates it in [onSelected]. Back, swipe, or an outside tap
- * dismisses the sheet without changing the selection.
+ * dismisses the sheet without changing the selection. [containerColor] colors both the field
+ * and the sheet so unselected option cards remain distinct in dark mode.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -246,7 +247,7 @@ fun AlpineDropdownField(
         ModalBottomSheet(
             onDismissRequest = { sheetVisible = false },
             sheetState = sheetState,
-            containerColor = if (darkTheme) ChoiceDarkCard else ChoiceLightSurface,
+            containerColor = surface,
             contentColor = ink,
             dragHandle = { BottomSheetDefaults.DragHandle(color = muted) },
         ) {
@@ -535,6 +536,7 @@ private fun AlpineChoicesPreview() {
             selectedId = unit,
             onSelected = { unit = it },
             darkTheme = dark,
+            containerColor = if (dark) Color.Black else Color.White,
         )
         AlpineSelectionGroup(title = "Dose type", darkTheme = dark) {
             AlpineRadioCard(
