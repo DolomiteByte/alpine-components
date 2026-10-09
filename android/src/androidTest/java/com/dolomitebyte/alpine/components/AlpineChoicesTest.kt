@@ -9,6 +9,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.click
@@ -116,6 +117,36 @@ class AlpineChoicesTest {
         assertEquals("drops", selected.value)
         composeRule.onNodeWithContentDescription("Unit")
             .assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Drop(s)"))
+    }
+
+    @Test
+    fun dropdownPrimaryActionPrecedesOptionsAndKeepsSelection() {
+        val selected = mutableStateOf("vitamin")
+        var actionClicks = 0
+        composeRule.setContent {
+            AlpineDropdownField(
+                label = "Medication",
+                options = listOf(AlpineDropdownOption("vitamin", "Vitamin D")),
+                selectedId = selected.value,
+                onSelected = { selected.value = it },
+                primaryActionLabel = "Add medication",
+                onPrimaryActionClick = { actionClicks++ },
+                darkTheme = true,
+            )
+        }
+
+        composeRule.onNodeWithContentDescription("Medication").performClick()
+        val action = composeRule.onNodeWithText("Add medication")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
+        val option = composeRule.onNodeWithContentDescription("Vitamin D")
+        assertTrue(action.fetchSemanticsNode().boundsInRoot.top < option.fetchSemanticsNode().boundsInRoot.top)
+        action.performClick()
+
+        assertEquals(1, actionClicks)
+        assertEquals("vitamin", selected.value)
+        composeRule.onNodeWithText("Add medication").assertDoesNotExist()
+        composeRule.onNodeWithContentDescription("Medication")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Vitamin D"))
     }
 
     @Test

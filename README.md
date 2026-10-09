@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.13.4")
+    implementation("com.github.DolomiteByte:alpine-components:0.13.5")
 }
 ```
 
@@ -238,7 +238,7 @@ The caller owns visibility. The overlay requests dismissal after four seconds by
 
 ### Dropdown and selection cards
 
-`AlpineDropdownField` uses the outlined, floating-label form style from the reference. On Android, tapping the field opens a Material 3 modal bottom sheet with the available options. The field and sheet share `containerColor`, keeping unselected option cards distinct in dark mode. The host owns the selected ID; tapping an option calls `onSelected` and closes the sheet. Back, a downward swipe, or tapping outside dismisses it without changing the value. Empty lists, disabled options, a disabled field, and error messages are supported.
+`AlpineDropdownField` uses the outlined, floating-label form style from the reference. On Android, tapping the field opens a Material 3 modal bottom sheet with the available options. The field and sheet share `containerColor`, keeping unselected option cards distinct in dark mode. The host owns the selected ID; tapping an option calls `onSelected` and closes the sheet. Back, a downward swipe, or tapping outside dismisses it without changing the value. Empty lists, disabled options, a disabled field, and error messages are supported. Pass both `primaryActionLabel` and `onPrimaryActionClick` to show a full-width Alpine primary button above the options. Its click closes the sheet and leaves the selection unchanged.
 
 `AlpineRadioCard` represents one option in a single-choice group. `AlpineCheckboxCard` is the matching multi-choice variant. Both cards have an optional supporting line, light and dark styles, enabled and selected states, accessible selection semantics, and ripple feedback. Selected cards use a borderless luminous Alpine gradient with a restrained shadow. Selected radio circles and checked boxes match the input accent: blue in light mode and cyan in dark mode. `AlpineSelectionGroup` adds the heading and spacing shown in the design.
 
@@ -265,6 +265,8 @@ AlpineDropdownField(
     ),
     selectedId = unit,
     onSelected = { unit = it },
+    primaryActionLabel = "Add unit",
+    onPrimaryActionClick = { /* Open the add-unit form. */ },
 )
 AlpineSelectionGroup("Dose type") {
     AlpineRadioCard(

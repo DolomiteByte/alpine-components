@@ -112,7 +112,9 @@ data class AlpineDropdownOption(
  * An outlined, controlled dropdown. Tapping it opens Android's Material 3 modal bottom sheet.
  * The host owns [selectedId] and updates it in [onSelected]. Back, swipe, or an outside tap
  * dismisses the sheet without changing the selection. [containerColor] colors both the field
- * and the sheet so unselected option cards remain distinct in dark mode.
+ * and the sheet so unselected option cards remain distinct in dark mode. Supply both
+ * [primaryActionLabel] and [onPrimaryActionClick] to place a primary button before the options;
+ * tapping it closes the sheet without changing the selection.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,10 +130,18 @@ fun AlpineDropdownField(
     errorMessage: String? = null,
     darkTheme: Boolean = isSystemInDarkTheme(),
     containerColor: Color? = null,
+    primaryActionLabel: String? = null,
+    onPrimaryActionClick: (() -> Unit)? = null,
 ) {
     require(label.isNotBlank()) { "AlpineDropdownField needs a label" }
     require(options.all { it.id.isNotBlank() && it.label.isNotBlank() }) { "Dropdown options need an ID and label" }
     require(options.map { it.id }.distinct().size == options.size) { "Dropdown option IDs must be unique" }
+    require((primaryActionLabel == null) == (onPrimaryActionClick == null)) {
+        "A dropdown primary action needs both a label and a click handler"
+    }
+    require(primaryActionLabel == null || primaryActionLabel.isNotBlank()) {
+        "A dropdown primary action needs a non-blank label"
+    }
 
     var sheetVisible by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -262,6 +272,19 @@ fun AlpineDropdownField(
                     lineHeight = 28.sp,
                 ),
             )
+            if (primaryActionLabel != null && onPrimaryActionClick != null) {
+                AlpinePrimaryButton(
+                    text = primaryActionLabel,
+                    onClick = {
+                        sheetVisible = false
+                        onPrimaryActionClick()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp, bottom = 16.dp),
+                    darkTheme = darkTheme,
+                )
+            }
             if (options.isEmpty()) {
                 BasicText(
                     text = stringResource(R.string.alpine_dropdown_empty),
@@ -269,7 +292,9 @@ fun AlpineDropdownField(
                     style = TextStyle(color = muted, fontFamily = ChoiceFont, fontSize = 14.sp, lineHeight = 20.sp),
                 )
             } else {
-                val maxListHeight = (LocalConfiguration.current.screenHeightDp.dp - 160.dp).coerceAtLeast(200.dp)
+                val actionHeight = if (primaryActionLabel == null) 0.dp else 68.dp
+                val maxListHeight = (LocalConfiguration.current.screenHeightDp.dp - 160.dp - actionHeight)
+                    .coerceAtLeast(200.dp)
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth().heightIn(max = maxListHeight),
                     contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 28.dp),
@@ -537,6 +562,8 @@ private fun AlpineChoicesPreview() {
             onSelected = { unit = it },
             darkTheme = dark,
             containerColor = if (dark) Color.Black else Color.White,
+            primaryActionLabel = "Add unit",
+            onPrimaryActionClick = {},
         )
         AlpineSelectionGroup(title = "Dose type", darkTheme = dark) {
             AlpineRadioCard(
