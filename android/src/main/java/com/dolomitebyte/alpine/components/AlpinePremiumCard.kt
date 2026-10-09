@@ -290,16 +290,16 @@ private fun PremiumStar(modifier: Modifier = Modifier) {
 private fun PremiumCheck(modifier: Modifier = Modifier) {
     Canvas(modifier) {
         val stroke = 1.7.dp.toPx()
-        drawCircle(PremiumCyan, radius = size.minDimension / 2f - stroke / 2f, style = Stroke(stroke))
+        drawCircle(Color.White, radius = size.minDimension / 2f - stroke / 2f, style = Stroke(stroke))
         drawLine(
-            PremiumCyan,
+            Color.White,
             Offset(size.width * 0.25f, size.height * 0.52f),
             Offset(size.width * 0.43f, size.height * 0.68f),
             stroke,
             cap = StrokeCap.Round,
         )
         drawLine(
-            PremiumCyan,
+            Color.White,
             Offset(size.width * 0.43f, size.height * 0.68f),
             Offset(size.width * 0.76f, size.height * 0.33f),
             stroke,
