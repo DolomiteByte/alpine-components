@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.13.1")
+    implementation("com.github.DolomiteByte:alpine-components:0.13.2")
 }
 ```
 
@@ -415,7 +415,7 @@ AlpineBottomTabs(
 )
 ```
 
-Place the bar in a `Scaffold`'s `bottomBar`. It applies the Android navigation bar inset by default. Set `darkTheme` if your app theme differs from the device setting, or pass `windowInsets` if a parent handles that inset. Each tab has selection and disabled semantics; the icon is decorative and the label names the destination. The example icons use the same Material 3 and Material icons dependencies noted above.
+Place the bar in a `Scaffold`'s `bottomBar`. It applies the Android navigation bar inset by default. Set `darkTheme` if your app theme differs from the device setting, or pass `windowInsets` if a parent handles that inset. Pass `containerColor = MaterialTheme.colorScheme.background` when the bar should blend into your app's canvas; leaving it unset keeps Alpine's default surface. Each tab has selection and disabled semantics; the icon is decorative and the label names the destination. The example icons use the same Material 3 and Material icons dependencies noted above.
 
 ### Toggles
 

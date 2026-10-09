@@ -68,7 +68,8 @@ data class AlpineBottomTabItem(
  * label; inactive tabs show only icons. Icons receive the current tint and their
  * semantics are hidden because [AlpineBottomTabItem.label] names the tab.
  * [windowInsets] defaults to the Android navigation bar inset and can be overridden
- * when a parent already applies it.
+ * when a parent already applies it. [containerColor] overrides the bar background
+ * so host apps can match their own light and dark surfaces.
  */
 @Composable
 fun AlpineBottomTabs(
@@ -78,11 +79,12 @@ fun AlpineBottomTabs(
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
     windowInsets: WindowInsets = WindowInsets.navigationBars,
+    containerColor: Color? = null,
 ) {
     require(items.isNotEmpty()) { "AlpineBottomTabs needs at least one item" }
     require(selectedIndex in items.indices) { "selectedIndex must refer to an item" }
 
-    val surface = if (darkTheme) DarkSurface else LightSurface
+    val surface = containerColor ?: if (darkTheme) DarkSurface else LightSurface
     val inactive = if (darkTheme) DarkInactive else LightInactive
 
     BoxWithConstraints(
@@ -193,6 +195,7 @@ private fun AlpineBottomTabsPreview() {
             selectedIndex = 0,
             onTabSelected = {},
             darkTheme = dark,
+            containerColor = if (dark) Color.Black else Color.White,
         )
     }
 }
