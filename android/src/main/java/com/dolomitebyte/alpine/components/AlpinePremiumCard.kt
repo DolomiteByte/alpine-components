@@ -110,7 +110,13 @@ fun AlpinePremiumCard(
             .alpha(if (enabled) 1f else 0.5f)
             .shadow(elevation, PremiumCardShape)
             .clip(PremiumCardShape)
-            .background(Brush.linearGradient(listOf(PremiumBlueStart, PremiumBlueEnd)))
+            .background(
+                Brush.linearGradient(
+                    0f to PremiumBlueStart,
+                    0.62f to PremiumBlueEnd,
+                    1f to PremiumCyan,
+                ),
+            )
             .border(
                 if (focused && enabled) 2.dp else 1.dp,
                 if (focused && enabled) PremiumCyan else if (darkTheme) PremiumDarkBorder else PremiumLightBorder,

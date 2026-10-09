@@ -4,7 +4,7 @@ Source layout: TheraBuddy's `PremiumDrawerCard`, adapted as a reusable Compose c
 
 | Property | Value |
 | --- | --- |
-| Surface | Alpine linear gradient `#0A5BE3` → `#0054FF` in both themes |
+| Surface | Alpine diagonal gradient `#0A5BE3` → `#0054FF` at 62% → `#33D5EB` in both themes |
 | Shape | 24 dp rounded corners; 18 dp internal padding |
 | Light border | 1 dp `#074BD1` |
 | Dark border | 1 dp `rgba(108,170,255,0.45)` |
@@ -14,4 +14,4 @@ Source layout: TheraBuddy's `PremiumDrawerCard`, adapted as a reusable Compose c
 | Call to action | White 48 dp minimum-height area; Alpine blue `#074BD1` label and arrow |
 | Interaction | Entire card has one button role and a bounded white ripple; disabled state blocks clicks |
 
-The gradient matches the Alpine primary button. Border and shadow change with the theme; hovering increases the shadow and pressing removes it. The inner action area is visual only, so it cannot dispatch a second click. The star icon can be replaced by a decorative Compose icon slot. Text and benefits can wrap on narrow screens.
+The gradient starts with the Alpine primary button's blue and ends in Alpine cyan, visibly brightening toward the lower right. The blue portion stays behind the white copy, and the cyan end sits mostly around the white action area. Border and shadow change with the theme; hovering increases the shadow and pressing removes it. The inner action area is visual only, so it cannot dispatch a second click. The star icon can be replaced by a decorative Compose icon slot. Text and benefits can wrap on narrow screens.
