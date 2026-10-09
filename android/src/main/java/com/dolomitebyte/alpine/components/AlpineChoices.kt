@@ -47,8 +47,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -72,6 +74,7 @@ import androidx.compose.ui.unit.sp
 
 private val ChoiceBlue = Color(0xFF0054FF)
 private val ChoiceDarkAccent = Color(0xFF8AB8FF)
+private val ChoiceDarkInputAccent = Color(0xFF33D5EB)
 private val ChoiceLightInk = Color(0xFF132B50)
 private val ChoiceDarkInk = Color(0xFFF4F8FF)
 private val ChoiceLightMuted = Color(0xFF60728B)
@@ -80,8 +83,11 @@ private val ChoiceLightSurface = Color.White
 private val ChoiceDarkSurface = Color(0xFF090D12)
 private val ChoiceLightCard = Color(0xFFF2F5F9)
 private val ChoiceDarkCard = Color(0xFF1B1D22)
-private val ChoiceLightSelected = Color(0xFFEAF2FF)
-private val ChoiceDarkSelected = Color(0xFF19283F)
+private val ChoiceLightSelectedStart = Color(0xFFDCEEFF)
+private val ChoiceLightSelectedEnd = Color(0xFFC8E1FF)
+private val ChoiceDarkSelectedStart = Color(0xFF2B67B3)
+private val ChoiceDarkSelectedEnd = Color(0xFF184477)
+private val ChoiceDarkSelectedMuted = Color(0xFFE4F1FF)
 private val ChoiceLightOutline = Color(0xFF8A94A4)
 private val ChoiceDarkOutline = Color(0xFF868D98)
 private val ChoiceLightError = Color(0xFFB42318)
@@ -373,17 +379,31 @@ private fun AlpineChoiceCard(
     require(title.isNotBlank()) { "Alpine choice cards need a title" }
     val interactions = remember { MutableInteractionSource() }
     val focused by interactions.collectIsFocusedAsState()
-    val accent = if (darkTheme) ChoiceDarkAccent else ChoiceBlue
+    val accent = when {
+        darkTheme && radio -> ChoiceDarkAccent
+        darkTheme -> ChoiceDarkInputAccent
+        else -> ChoiceBlue
+    }
     val muted = if (darkTheme) ChoiceDarkMuted else ChoiceLightMuted
-    val surface by animateColorAsState(
+    val surfaceStart by animateColorAsState(
         targetValue = when {
-            selected && darkTheme -> ChoiceDarkSelected
-            selected -> ChoiceLightSelected
+            selected && darkTheme -> ChoiceDarkSelectedStart
+            selected -> ChoiceLightSelectedStart
             darkTheme -> ChoiceDarkCard
             else -> ChoiceLightCard
         },
         animationSpec = tween(180),
-        label = "Alpine choice surface",
+        label = "Alpine choice surface start",
+    )
+    val surfaceEnd by animateColorAsState(
+        targetValue = when {
+            selected && darkTheme -> ChoiceDarkSelectedEnd
+            selected -> ChoiceLightSelectedEnd
+            darkTheme -> ChoiceDarkCard
+            else -> ChoiceLightCard
+        },
+        animationSpec = tween(180),
+        label = "Alpine choice surface end",
     )
     val accessibleLabel = if (supportingText.isNullOrBlank()) title else "$title. $supportingText"
     val selectionModifier = if (radio) {
@@ -411,9 +431,14 @@ private fun AlpineChoiceCard(
             .fillMaxWidth()
             .defaultMinSize(minHeight = 76.dp)
             .alpha(if (enabled) 1f else 0.48f)
+            .shadow(
+                elevation = if (focused) 10.dp else if (selected) 6.dp else 0.dp,
+                shape = ChoiceCardShape,
+                ambientColor = accent.copy(alpha = 0.32f),
+                spotColor = accent.copy(alpha = 0.32f),
+            )
             .clip(ChoiceCardShape)
-            .background(surface)
-            .border(1.dp, if (selected || focused) accent else Color.Transparent, ChoiceCardShape)
+            .background(Brush.horizontalGradient(listOf(surfaceStart, surfaceEnd)))
             .semantics(mergeDescendants = true) { contentDescription = accessibleLabel }
             .then(selectionModifier)
             .padding(horizontal = 20.dp, vertical = 16.dp),
@@ -430,7 +455,7 @@ private fun AlpineChoiceCard(
                 if (selected) drawCircle(accent, radius = size.minDimension * 0.25f)
             } else {
                 val radius = CornerRadius(5.dp.toPx())
-                if (selected) drawRoundRect(color = ChoiceBlue, cornerRadius = radius)
+                if (selected) drawRoundRect(color = accent, cornerRadius = radius)
                 drawRoundRect(
                     color = if (selected) accent else muted,
                     cornerRadius = radius,
@@ -438,14 +463,14 @@ private fun AlpineChoiceCard(
                 )
                 if (selected) {
                     drawLine(
-                        Color.White,
+                        if (darkTheme) ChoiceDarkSurface else Color.White,
                         Offset(size.width * 0.25f, size.height * 0.51f),
                         Offset(size.width * 0.43f, size.height * 0.68f),
                         stroke,
                         cap = StrokeCap.Round,
                     )
                     drawLine(
-                        Color.White,
+                        if (darkTheme) ChoiceDarkSurface else Color.White,
                         Offset(size.width * 0.43f, size.height * 0.68f),
                         Offset(size.width * 0.76f, size.height * 0.32f),
                         stroke,
@@ -471,7 +496,12 @@ private fun AlpineChoiceCard(
                 BasicText(
                     text = supportingText,
                     modifier = Modifier.clearAndSetSemantics {},
-                    style = TextStyle(color = muted, fontFamily = ChoiceFont, fontSize = 12.sp, lineHeight = 17.sp),
+                    style = TextStyle(
+                        color = if (selected && darkTheme) ChoiceDarkSelectedMuted else muted,
+                        fontFamily = ChoiceFont,
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp,
+                    ),
                 )
             }
         }

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.DolomiteByte"
-version = "0.13.0"
+version = "0.13.1"
 
 android {
     namespace = "com.dolomitebyte.alpine.components"

@@ -15,7 +15,8 @@ The reference form uses a floating-label outlined dropdown above rounded single-
 
 - Minimum height: 76 dp. Corners: 24 dp. Horizontal inset: 20 dp. Indicator: 20 dp with 12 dp gap to text.
 - Title: Manrope SemiBold 14 sp; supporting text: Manrope 12 sp. The heading in `AlpineSelectionGroup` is Manrope Bold 20 sp with an 18 dp gap before the cards and 8 dp between cards.
-- Dark mode: inactive `#1B1D22`; selected `#19283F` with an `#8AB8FF` border and indicator. Light mode: inactive `#F2F5F9`; selected `#EAF2FF` with Alpine blue `#0054FF` border and indicator.
+- Dark mode: inactive `#1B1D22`; selected cards glow from `#2B67B3` to `#184477`. Light mode: inactive `#F2F5F9`; selected cards glow from `#DCEEFF` to `#C8E1FF`. Selected cards have no border and gain a soft shadow. The selected radio indicator remains `#8AB8FF` in dark mode and Alpine blue `#0054FF` in light mode.
+- Checked boxes use the same accent as Alpine inputs: `#0054FF` in light mode and `#33D5EB` in dark mode. The check is white on blue and dark on cyan for contrast.
 - Radio cards expose `RadioButton` selection semantics. Checkbox cards expose `Checkbox` checked semantics. The entire card is the touch target. Disabled cards are dimmed and cannot change state.
 - A bounded ripple appears within the rounded card on tap. Selection background animates over 180 ms.
 

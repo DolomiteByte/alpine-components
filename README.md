@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.13.0")
+    implementation("com.github.DolomiteByte:alpine-components:0.13.1")
 }
 ```
 
@@ -240,7 +240,7 @@ The caller owns visibility. The overlay requests dismissal after four seconds by
 
 `AlpineDropdownField` uses the outlined, floating-label form style from the reference. On Android, tapping the field opens a Material 3 modal bottom sheet with the available options. The host owns the selected ID; tapping an option calls `onSelected` and closes the sheet. Back, a downward swipe, or tapping outside dismisses it without changing the value. Empty lists, disabled options, a disabled field, and error messages are supported.
 
-`AlpineRadioCard` represents one option in a single-choice group. `AlpineCheckboxCard` is the matching multi-choice variant. Both cards have an optional supporting line, light and dark styles, enabled and selected states, accessible selection semantics, and ripple feedback. `AlpineSelectionGroup` adds the heading and spacing shown in the design.
+`AlpineRadioCard` represents one option in a single-choice group. `AlpineCheckboxCard` is the matching multi-choice variant. Both cards have an optional supporting line, light and dark styles, enabled and selected states, accessible selection semantics, and ripple feedback. Selected cards use a borderless luminous Alpine gradient. Checked boxes match the input accent: blue in light mode and cyan in dark mode. `AlpineSelectionGroup` adds the heading and spacing shown in the design.
 
 ```kotlin
 import androidx.compose.runtime.getValue
