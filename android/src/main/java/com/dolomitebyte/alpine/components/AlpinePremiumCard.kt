@@ -79,8 +79,9 @@ private val PremiumFont = FontFamily(
  * A compact upgrade card based on TheraBuddy's drawer card, using the Alpine palette.
  *
  * The entire card is one action. Its visual call to action shares [onClick] and does not
- * create a second touch target. [icon] receives the Alpine cyan tint; when omitted a star
- * is drawn. [darkTheme] controls the border and shadow while retaining the brand gradient.
+ * create a second touch target. [icon] receives the Alpine cyan tint in a translucent circle;
+ * when omitted, a transparent star is cut out of a white circle. [darkTheme] controls the border
+ * and shadow while retaining the brand gradient.
  * [animateGradient] slowly shifts the background; pass false for a static surface.
  */
 @Composable
@@ -166,15 +167,19 @@ fun AlpinePremiumCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.16f))
-                        .clearAndSetSemantics {},
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (icon != null) icon(PremiumCyan) else PremiumStar(Modifier.size(23.dp))
+                if (icon != null) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.16f))
+                            .clearAndSetSemantics {},
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        icon(PremiumCyan)
+                    }
+                } else {
+                    PremiumStar(Modifier.size(44.dp).clearAndSetSemantics {})
                 }
                 Column(
                     modifier = Modifier.weight(1f),
@@ -269,8 +274,8 @@ fun AlpinePremiumCard(
 
 @Composable
 private fun PremiumStar(modifier: Modifier = Modifier) {
-    Canvas(modifier) {
-        val outer = size.minDimension * 0.47f
+    Canvas(modifier.graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }) {
+        val outer = size.minDimension * 0.25f
         val inner = outer * 0.47f
         val cx = size.width / 2f
         val cy = size.height / 2f
@@ -284,7 +289,8 @@ private fun PremiumStar(modifier: Modifier = Modifier) {
             }
             close()
         }
-        drawPath(path, PremiumCyan)
+        drawCircle(Color.White, radius = size.minDimension / 2f)
+        drawPath(path, Color.Transparent, blendMode = BlendMode.Clear)
     }
 }
 
