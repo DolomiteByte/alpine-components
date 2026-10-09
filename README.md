@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, alert dialogs, snackbars, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, a premium card, alert dialogs, snackbars, text, email, number, and password inputs, a message area, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.11.3")
+    implementation("com.github.DolomiteByte:alpine-components:0.12.0")
 }
 ```
 
@@ -141,6 +141,26 @@ AlpineFabOverlay(
 ```
 
 `AlpineFabOverlay` floats the button over its content. `Alignment.BottomEnd` and `Alignment.BottomStart` place it in the bottom corners; any other `Alignment` plus `offset = DpOffset(x, y)` gives a custom position. The default 16 dp edge padding and safe drawing insets keep the FAB clear of system bars. Pass `windowInsets = WindowInsets(0, 0, 0, 0)` if the parent already handles them. Increase `edgePadding` or use a negative vertical offset to place it above bottom tabs. The content itself is not inset by the overlay.
+
+### Premium card
+
+`AlpinePremiumCard` follows TheraBuddy's compact premium drawer card with Alpine blue gradient `#0A5BE3` → `#0054FF`, cyan details, white text, and a white action area. The full card is one accessible button with a bounded ripple; the action area is its visual call to action. It accepts custom copy, benefits, and an optional icon slot. The gradient stays the same in light and dark mode while the border and shadow adapt.
+
+```kotlin
+import com.dolomitebyte.alpine.components.AlpinePremiumCard
+
+AlpinePremiumCard(
+    eyebrow = "7 Tage kostenlos",
+    title = "Premium freischalten",
+    description = "Ohne Werbung und mit unbegrenzten Dokumentfunktionen.",
+    benefits = listOf("Ruhige Nutzung ohne Werbung", "Unbegrenzte Dokumentfunktionen"),
+    actionText = "Premium ansehen",
+    onClick = ::openPremium,
+    darkTheme = appDarkTheme,
+)
+```
+
+Set `enabled = false` to block interaction. The default star can be replaced with `icon = { tint -> ... }`; decorative icons inside that slot should have no content description.
 
 ### Alert dialog
 
