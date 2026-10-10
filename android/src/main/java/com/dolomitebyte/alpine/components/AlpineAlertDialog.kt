@@ -56,6 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 private val LightSurface = Color.White
 private val DarkSurface = Color(0xFF181D23)
@@ -81,6 +82,7 @@ private val LocalDialogDarkTheme = staticCompositionLocalOf<Boolean?> { null }
  *
  * Pass both [secondaryActionText] and [onSecondaryAction] to show a secondary action.
  * [content] can contain any Compose UI; long content scrolls while actions stay visible.
+ * The modal uses a 16 dp window inset so both actions can share a row on wider phones.
  */
 @Composable
 fun AlpineAlertDialog(
@@ -100,13 +102,16 @@ fun AlpineAlertDialog(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
         AlpineAlertDialogContainer(
             title = title,
             primaryActionText = primaryActionText,
             onPrimaryAction = onPrimaryAction,
             onClose = onDismissRequest,
-            modifier = modifier,
+            modifier = Modifier.padding(horizontal = 16.dp).then(modifier),
             secondaryActionText = secondaryActionText,
             onSecondaryAction = onSecondaryAction,
             primaryActionEnabled = primaryActionEnabled,
@@ -322,7 +327,13 @@ private fun AlpineDialogCloseButton(onClick: () -> Unit, darkTheme: Boolean) {
     }
 }
 
-@Preview(name = "Alert dialog light", showBackground = true, backgroundColor = 0xFFF5F8FF)
+@Preview(
+    name = "Alert dialog actions in one row",
+    showBackground = true,
+    backgroundColor = 0xFFF5F8FF,
+    widthDp = 448,
+)
+@Preview(name = "Alert dialog compact", showBackground = true, widthDp = 320)
 @Preview(
     name = "Alert dialog dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
