@@ -95,6 +95,8 @@ fun AlpineAlertDialog(
     primaryActionLoading: Boolean = false,
     secondaryActionEnabled: Boolean = true,
     secondaryActionLoading: Boolean = false,
+    primaryActionModifier: Modifier = Modifier,
+    secondaryActionModifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -111,6 +113,8 @@ fun AlpineAlertDialog(
             primaryActionLoading = primaryActionLoading,
             secondaryActionEnabled = secondaryActionEnabled,
             secondaryActionLoading = secondaryActionLoading,
+            primaryActionModifier = primaryActionModifier,
+            secondaryActionModifier = secondaryActionModifier,
             darkTheme = darkTheme,
             content = content,
         )
@@ -131,6 +135,8 @@ fun AlpineAlertDialogContainer(
     primaryActionLoading: Boolean = false,
     secondaryActionEnabled: Boolean = true,
     secondaryActionLoading: Boolean = false,
+    primaryActionModifier: Modifier = Modifier,
+    secondaryActionModifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -197,7 +203,7 @@ fun AlpineAlertDialogContainer(
                     AlpineSecondaryButton(
                         text = secondaryActionText,
                         onClick = onSecondaryAction!!,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).then(secondaryActionModifier),
                         enabled = secondaryActionEnabled,
                         loading = secondaryActionLoading,
                         darkTheme = darkTheme,
@@ -205,7 +211,7 @@ fun AlpineAlertDialogContainer(
                     AlpinePrimaryButton(
                         text = primaryActionText,
                         onClick = onPrimaryAction,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).then(primaryActionModifier),
                         enabled = primaryActionEnabled,
                         loading = primaryActionLoading,
                         showDefaultArrow = false,
@@ -218,7 +224,7 @@ fun AlpineAlertDialogContainer(
                         AlpineSecondaryButton(
                             text = secondaryActionText,
                             onClick = onSecondaryAction!!,
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().then(secondaryActionModifier),
                             enabled = secondaryActionEnabled,
                             loading = secondaryActionLoading,
                             darkTheme = darkTheme,
@@ -227,7 +233,7 @@ fun AlpineAlertDialogContainer(
                     AlpinePrimaryButton(
                         text = primaryActionText,
                         onClick = onPrimaryAction,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().then(primaryActionModifier),
                         enabled = primaryActionEnabled,
                         loading = primaryActionLoading,
                         showDefaultArrow = false,
