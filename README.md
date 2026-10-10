@@ -1,6 +1,6 @@
 # alpine-components
 
-Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, a premium card, alert dialogs, snackbars, text, email, number, and password inputs, a message area, dropdowns, radio and checkbox cards, bottom tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
+Public DolomiteByte components for Web, Android, and iOS. The Android package currently contains primary and secondary buttons, floating action buttons, a premium card, alert dialogs, snackbars, text, email, number, and password inputs, a message area, dropdowns, radio and checkbox cards, bottom tabs, segmented tabs, and toggles for Jetpack Compose. Web components and iOS components will be added as separate installable packages.
 
 ## Android
 
@@ -22,7 +22,7 @@ Add the versioned Android module to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.DolomiteByte:alpine-components:0.13.5")
+    implementation("com.github.DolomiteByte:alpine-components:0.14.0")
 }
 ```
 
@@ -419,6 +419,31 @@ AlpineBottomTabs(
 
 Place the bar in a `Scaffold`'s `bottomBar`. It applies the Android navigation bar inset by default. Set `darkTheme` if your app theme differs from the device setting, or pass `windowInsets` if a parent handles that inset. Pass `containerColor = MaterialTheme.colorScheme.background` when the bar should blend into your app's canvas; leaving it unset keeps Alpine's default surface. Each tab has selection and disabled semantics; the icon is decorative and the label names the destination. The example icons use the same Material 3 and Material icons dependencies noted above.
 
+### Segmented tabs
+
+`AlpineSegmentedTabs` switches between related views or time ranges within a screen. Each text tab keeps the same width and a 48 dp touch height; the selected Alpine blue pill slides behind its label. The shared track has no outlines around individual tabs. It supports light and dark mode, disabled tabs, and a custom track color.
+
+```kotlin
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.dolomitebyte.alpine.components.AlpineSegmentedTabItem
+import com.dolomitebyte.alpine.components.AlpineSegmentedTabs
+
+var selectedRange by rememberSaveable { mutableIntStateOf(2) }
+val ranges = listOf("7 T", "30 T", "3 M", "6 M").map(::AlpineSegmentedTabItem)
+
+AlpineSegmentedTabs(
+    items = ranges,
+    selectedIndex = selectedRange,
+    onTabSelected = { selectedRange = it },
+    darkTheme = appDarkTheme,
+)
+```
+
+Render the content for `selectedRange` in the host app. The bar fills its available width; allow at least 48 dp per tab. `AlpineSegmentedTabItem("6 M", enabled = false)` dims a choice and prevents selection. Selected, disabled, and tab role semantics are available to accessibility services. Use `AlpineBottomTabs` for persistent bottom navigation.
+
 ### Toggles
 
 `AlpineToggle` is a controlled settings switch with a label and optional supporting text. `AlpineThemeToggle` follows the DolomiteByte header switch: the sun sits on the right in light mode, and the moon moves left in dark mode. Both use the site's 56 × 32 dp track, 24 dp thumb, and 200 ms transition. The whole row has a 48 dp minimum touch height, switch semantics, localized state descriptions, and a disabled state.
@@ -464,7 +489,7 @@ Run the UI tests on an Android emulator:
 ./gradlew :android:connectedDebugAndroidTest
 ```
 
-The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/alert-dialog.md](design/alert-dialog.md), [design/ripple.md](design/ripple.md), [design/inputs.md](design/inputs.md), [design/choices.md](design/choices.md), [design/bottom-tabs.md](design/bottom-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
+The cross-platform design details are in [design/primary-button.md](design/primary-button.md), [design/secondary-button.md](design/secondary-button.md), [design/fabs.md](design/fabs.md), [design/alert-dialog.md](design/alert-dialog.md), [design/ripple.md](design/ripple.md), [design/inputs.md](design/inputs.md), [design/choices.md](design/choices.md), [design/bottom-tabs.md](design/bottom-tabs.md), [design/segmented-tabs.md](design/segmented-tabs.md), and [design/toggles.md](design/toggles.md). The bundled Manrope fonts are derived from [Google Fonts Manrope](https://github.com/google/fonts/tree/main/ofl/manrope) and retain their [SIL Open Font License](licenses/OFL-Manrope.txt).
 
 ## License
 
